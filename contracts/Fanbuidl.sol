@@ -28,7 +28,9 @@ contract Fanbuidl {
         string desription;
         uint balance;
         SubscriptionType subType;
+        uint subFee;
         bool active;
+        bool check;
     }
 
     // Creator Storage
@@ -56,7 +58,8 @@ contract Fanbuidl {
     }
 
     /*
-        - Setup owner address ( who deploys this contract for admin purpose)
+        Constructor:
+            - Setup owner address ( who deploys this contract for admin purpose)
     */
     constructor() {
         owner = msg.sender;
@@ -64,18 +67,25 @@ contract Fanbuidl {
 
     /*
         Name: createCreator
-
-        struct Creator {
-            string accountName;
-            string desription;
-            uint balance;
-            SubscriptionType subType;
-            bool active;
-    }
+        parameters: 
+            - name (string): Name of the creator
+            - desc (string): Description
+            - subtype(SubscriptionType): subscription type activated (Weekly, Monthly, etc)
+            - fee (uint): subscription fee for subtype selected
     */
-    function createCreator(string calldata name, string calldata desc, SubscriptionType subtype) public{
-        require(creatorList[msg.sender].active==false, "Creator already exists");
-        creators.push(Creator(name, desc, 0, subtype, true));
+    function createCreator(string calldata name, string calldata desc, SubscriptionType subtype, uint fee) public{
+        require(creatorList[msg.sender].check==false, "Creator already exists");
+        creators.push(Creator(name, desc, 0, subtype, fee, true, true));
         creatorList[msg.sender] = creators[creators.length - 1];
+    }
+
+    /*
+        Name: getCreator
+        Parameters:
+            - ad (address): address of creator
+    */
+    function getCreator(address ad) public view returns(Creator memory cr){
+        require(creatorList[ad].check==true, "Creator already exists");
+        return creatorList[ad];
     }
 }
