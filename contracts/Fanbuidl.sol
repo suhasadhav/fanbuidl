@@ -83,9 +83,37 @@ contract Fanbuidl {
         Name: getCreator
         Parameters:
             - ad (address): address of creator
+        Usage: get creator details from the address
     */
     function getCreator(address ad) public view returns(Creator memory cr){
-        require(creatorList[ad].check==true, "Creator already exists");
+        require(creatorList[ad].check==true, "Creator does not exists");
         return creatorList[ad];
     }
+    /*
+        Name: activateCreator
+        Parameters:
+            - ad (address): address of creator
+        Usage: Activate creator executable by own
+    */
+    function activateCreator(address ad) public{
+        require(ad==msg.sender, "You can activate your account only");
+        require(creatorList[ad].check==true, "Creator does not exists");
+        require(creatorList[ad].active==false, "Creator Already activated");
+        creatorList[ad].active = true;
+    }
+
+    /*
+        Name: deactivateCreator
+        Parameters:
+            - ad (address): address of creator
+        Usage: Deactivate creator executable by own
+    */
+    function deactivateCreator(address ad) public{
+        require(ad==msg.sender, "You can deactivate your account only");
+        require(creatorList[ad].check==true, "Creator does not exists");
+        require(creatorList[ad].active==true, "Creator Already deactivated");
+        creatorList[ad].active = false;
+    }
+    
+
 }
