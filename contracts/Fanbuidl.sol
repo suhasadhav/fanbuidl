@@ -57,6 +57,14 @@ contract Fanbuidl {
         _;
     }
 
+    // If creator is activated get address and accountName
+    event creatorActivated(address, string);
+
+    // If creator is deactivated get address and accountName
+    event creatorDeactivated(address, string);
+
+    // New creator account created get address and account name
+    event creatorCreated(address, string);
     /*
         Constructor:
             - Setup owner address ( who deploys this contract for admin purpose)
@@ -64,7 +72,7 @@ contract Fanbuidl {
     constructor() {
         owner = msg.sender;
     }
-    
+
     /*
         Name: getOwner
         Return Values: 
@@ -86,6 +94,7 @@ contract Fanbuidl {
         require(creatorList[msg.sender].check==false, "Creator already exists");
         creators.push(Creator(name, desc, 0, subtype, fee, true, true));
         creatorList[msg.sender] = creators[creators.length - 1];
+        emit creatorCreated(msg.sender, creatorList[msg.sender].accountName);
     }
 
     /*
@@ -109,6 +118,7 @@ contract Fanbuidl {
         require(creatorList[ad].check==true, "Creator does not exists");
         require(creatorList[ad].active==false, "Creator Already activated");
         creatorList[ad].active = true;
+        emit creatorActivated(msg.sender, creatorList[ad].accountName);
     }
 
     /*
@@ -122,7 +132,6 @@ contract Fanbuidl {
         require(creatorList[ad].check==true, "Creator does not exists");
         require(creatorList[ad].active==true, "Creator Already deactivated");
         creatorList[ad].active = false;
+        emit creatorDeactivated(msg.sender, creatorList[ad].accountName);
     }
-    
-
 }
