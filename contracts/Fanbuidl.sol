@@ -64,6 +64,15 @@ contract Fanbuidl {
     constructor() {
         owner = msg.sender;
     }
+    
+    /*
+        Name: getOwner
+        Return Values: 
+            - ownerAddress (address): Address of the owner
+    */
+    function getOwner() public view returns(address){
+        return owner;
+    }
 
     /*
         Name: createCreator
@@ -73,7 +82,7 @@ contract Fanbuidl {
             - subtype(SubscriptionType): subscription type activated (Weekly, Monthly, etc)
             - fee (uint): subscription fee for subtype selected
     */
-    function createCreator(string calldata name, string calldata desc, SubscriptionType subtype, uint fee) public{
+    function createCreator(string memory name, string memory desc, SubscriptionType subtype, uint fee) public{
         require(creatorList[msg.sender].check==false, "Creator already exists");
         creators.push(Creator(name, desc, 0, subtype, fee, true, true));
         creatorList[msg.sender] = creators[creators.length - 1];
