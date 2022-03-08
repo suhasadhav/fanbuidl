@@ -40,15 +40,15 @@ describe("Fanbuidl Creator", function () {
 
     it('Should activateCreator if exists and deactivated', async function () {
       await fb.createCreator("Suhas", "This is description", 2, 10);
-      await (fb.deactivateCreator(owner.address));
-      await (fb.activateCreator(owner.address));
+      await (fb.deactivateCreator());
+      await (fb.activateCreator());
       acc = await fb.getCreator(owner.address);
       await expect(acc).to.have.deep.property("active", true);
     });
 
     it('Should deactivateCreator if exists, activated', async function () {
       await fb.createCreator("Suhas", "This is description", 2, 10);
-      await (fb.deactivateCreator(owner.address));
+      await (fb.deactivateCreator());
       acc = await fb.getCreator(owner.address);
       await expect(acc).to.have.deep.property("active", false);
     });
@@ -77,19 +77,17 @@ describe("Fanbuidl Creator", function () {
 
     it('Should emit creatorActivated', async function () {
       await fb.createCreator("Suhas", "This is desc", 2, 10);
-      await (fb.deactivateCreator(owner.address));
-      await expect(fb.activateCreator(owner.address)).to
+      await (fb.deactivateCreator());
+      await expect(fb.activateCreator()).to
       .emit(fb, 'creatorActivated')
       .withArgs(owner.address, "Suhas");
     });
 
     it('Should emit creatorDeactivated', async function () {
       await fb.createCreator("Suhas", "This is desc", 2, 10);
-      await expect(fb.deactivateCreator(owner.address)).to
+      await expect(fb.deactivateCreator()).to
       .emit(fb, 'creatorDeactivated')
       .withArgs(owner.address, "Suhas");
     });
-
-
   });
 });

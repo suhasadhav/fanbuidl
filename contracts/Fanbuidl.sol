@@ -65,6 +65,10 @@ contract Fanbuidl {
 
     // New creator account created get address and account name
     event creatorCreated(address, string);
+
+    // Creator name updated returns address and accountName
+    event creatorNameUpdated(address, string);
+
     /*
         Constructor:
             - Setup owner address ( who deploys this contract for admin purpose)
@@ -107,31 +111,90 @@ contract Fanbuidl {
         require(creatorList[ad].check==true, "Creator does not exists");
         return creatorList[ad];
     }
+
+    /*
+        Name: updateCreatorName
+        Parameters:
+            - _name: New name to be updated
+    */
+    function updateCreatorName(string memory _name) public{
+        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
+        require(creatorList[msg.sender].active==true, "Your creator account is deactivated, first activate it");
+        require(keccak256(abi.encodePacked((_name))) == keccak256(abi.encodePacked((""))),"Blank name updation not allowed");
+        require(keccak256(abi.encodePacked(creatorList[msg.sender].accountName)) != keccak256(abi.encodePacked(_name)), "Same Name updation failed");
+        creatorList[msg.sender].accountName = _name;
+        emit creatorNameUpdated(msg.sender,creatorList[msg.sender].accountName);
+    }
+    /*
+        Name: updateCreatorDesc
+        Parameters:
+            - _name: New desc to be updated
+
+
+        struct Creator {
+            string accountName;
+            string desription;
+            uint balance;
+            SubscriptionType subType;
+            uint subFee;
+            bool active;
+            bool check;
+        }
+            uint _subType, uint _subFee
+    */
+    function updateCreatorDesc(string memory _desc) public {
+        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
+        require(creatorList[msg.sender].active==true, "Your creator account is deactivated, first activate it");
+        require(keccak256(abi.encodePacked(_desc)) == keccak256(abi.encodePacked((""))),"Blank name updation not allowed");
+        require(keccak256(abi.encodePacked(creatorList[msg.sender].desription)) != keccak256(abi.encodePacked(_desc)), "Same Name updation failed");
+        creatorList[msg.sender].desription = _desc;
+        emit creatorNameUpdated(msg.sender,creatorList[msg.sender].accountName);
+    }
+
+
+    function updateCreator(string memory _name, string memory _desc, uint8 _subType, uint _subFee) public {
+        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
+        require(creatorList[msg.sender].active==true, "Your creator account is deactivated, first activate it");
+        if(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(""))){
+            require(keccak256(abi.encodePacked(creatorList[msg.sender].accountName)) != keccak256(abi.encodePacked(_name)), "Same Name updation failed");
+            creatorList[msg.sender].accountName = _name;
+        }
+        
+        if(keccak256(abi.encodePacked(_desc)) != keccak256(abi.encodePacked(""))){
+            require(keccak256(abi.encodePacked(creatorList[msg.sender].desription)) != keccak256(abi.encodePacked(_desc)), "Same description updation failed");
+            creatorList[msg.sender].desription = _desc;
+        }
+
+        if(_subType != 99){
+            require(creatorList[msg.sender].subType != SubscriptionType(_subType), "Same subscrition type updation failed");
+            creatorList[msg.sender].subType = SubscriptionType(_subType);
+        }
+        if(_subFee != 999999){
+            require(creatorList[msg.sender].subFee != _subFee, "Same subscrition fee updation failed");
+            creatorList[msg.sender].subFee = _subFee;
+        }
+
+    }
+
     /*
         Name: activateCreator
-        Parameters:
-            - ad (address): address of creator
-        Usage: Activate creator executable by own
+        Usage: Activate creator account of contract calling address
     */
-    function activateCreator(address ad) public{
-        require(ad==msg.sender, "You can activate your account only");
-        require(creatorList[ad].check==true, "Creator does not exists");
-        require(creatorList[ad].active==false, "Creator Already activated");
-        creatorList[ad].active = true;
-        emit creatorActivated(msg.sender, creatorList[ad].accountName);
+    function activateCreator() public{
+        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
+        require(creatorList[msg.sender].active==false, "your account is Already activated");
+        creatorList[msg.sender].active = true;
+        emit creatorActivated(msg.sender, creatorList[msg.sender].accountName);
     }
 
     /*
         Name: deactivateCreator
-        Parameters:
-            - ad (address): address of creator
-        Usage: Deactivate creator executable by own
+        Usage: Deactivate creator account of contract calling address
     */
-    function deactivateCreator(address ad) public{
-        require(ad==msg.sender, "You can deactivate your account only");
-        require(creatorList[ad].check==true, "Creator does not exists");
-        require(creatorList[ad].active==true, "Creator Already deactivated");
-        creatorList[ad].active = false;
-        emit creatorDeactivated(msg.sender, creatorList[ad].accountName);
+    function deactivateCreator() public{
+        require(creatorList[msg.sender].check==true, "Your creator does not exists");
+        require(creatorList[msg.sender].active==true, "Your creator account is already deactivated");
+        creatorList[msg.sender].active = false;
+        emit creatorDeactivated(msg.sender, creatorList[msg.sender].accountName);
     }
 }
