@@ -132,7 +132,7 @@ contract Fanbuidl {
         int8 _subType, 
         int24 _subFee
         ) public {
-        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
+        require(creatorList[msg.sender].check==true, "Creator does not exists");
         require(creatorList[msg.sender].active==true, "Your creator account is deactivated");
         require(_subFee < 1000000);
         bool updated = false;
@@ -163,8 +163,7 @@ contract Fanbuidl {
         }
         if(updated){
             emit creatorUpdated(msg.sender, creatorList[msg.sender].accountName);
-        }
-        else{
+        }else{
             revert("Nothing updated");
         }
     }

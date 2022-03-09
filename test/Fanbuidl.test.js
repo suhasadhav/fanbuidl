@@ -34,8 +34,38 @@ describe("Fanbuidl Creator", function () {
       expect(acc).to.have.deep.property("accountName", "Suhas");
       expect(acc).to.have.deep.property("desription", "This is description for the creator and his/her content and can be long");
       expect(acc).to.have.deep.property("subType", 2);
-      expect(acc).to.have.deep.property("subFee", ethers.BigNumber.from(10));    
-      expect(acc).to.have.deep.property("balance", ethers.BigNumber.from(0));
+      expect(acc).to.have.deep.property("subFee").to.equal(10);    
+      expect(acc).to.have.deep.property("balance").to.equal(0);
+    });
+    
+    it('Should updateCreator(single field) if exists and activated', async function () {
+      await fb.createCreator("Suhas", "This is description", 2, 10);
+      await fb.updateCreator("Suhas2", "", -1,-1);
+      acc = await fb.getCreator(owner.address);
+      expect(acc).to.have.deep.property("accountName", "Suhas2");
+      expect(acc).to.have.deep.property("desription", "This is description");
+      expect(acc).to.have.deep.property("subType", 2);
+      expect(acc).to.have.deep.property("subFee").to.equal(10);
+    });
+
+    it('Should updateCreator(multiple fields) if exists and activated', async function () {
+      await fb.createCreator("Suhas", "This is description", 2, 10);
+      await fb.updateCreator("Suhas2", "", -1, 20);
+      acc = await fb.getCreator(owner.address);
+      expect(acc).to.have.deep.property("accountName", "Suhas2");
+      expect(acc).to.have.deep.property("desription", "This is description");
+      expect(acc).to.have.deep.property("subType", 2);
+      expect(acc).to.have.deep.property("subFee").to.equal(20);
+    });
+
+    it('Should updateCreator(all fields) if exists and activated', async function () {
+      await fb.createCreator("Suhas", "This is description", 2, 10);
+      await fb.updateCreator("Suhas2", "desc2", 1, 20);
+      acc = await fb.getCreator(owner.address);
+      expect(acc).to.have.deep.property("accountName", "Suhas2");
+      expect(acc).to.have.deep.property("desription", "desc2");
+      expect(acc).to.have.deep.property("subType", 1);
+      expect(acc).to.have.deep.property("subFee").to.equal(20);
     });
 
     it('Should activateCreator if exists and deactivated', async function () {
@@ -65,6 +95,21 @@ describe("Fanbuidl Creator", function () {
     it('Should revert getCreator for non existing Creator', async function () {
       await expect(fb.getCreator(addr1.address)).to.revertedWith("Creator does not exists");
     });
+
+    it('Should revert updateCreator for non existing Creator', async function () {
+      await expect(fb.connect(addr1).updateCreator("Suhas2", "desc2", 1, 20)).to.revertedWith("Creator does not exists");
+    });
+
+    it('Should revert updateCreator for deactivated Creator', async function () {
+      await fb.createCreator("Suhas", "desc", 2, 10);
+      await (fb.deactivateCreator());
+      await expect(fb.connect(owner).updateCreator("Suhas2", "desc2", 1, 20)).to.revertedWith("Your creator account is deactivated");
+    });
+
+    it('Should revert updateCreator if nothing updated', async function () {
+      await fb.createCreator("Suhas", "desc", 2, 10);
+      await expect(fb.connect(owner).updateCreator("Suhas", "desc", 2, 10)).to.revertedWith("Nothing updated");
+    });
   })
 
   
@@ -89,5 +134,13 @@ describe("Fanbuidl Creator", function () {
       .emit(fb, 'creatorDeactivated')
       .withArgs(owner.address, "Suhas");
     });
+
+    it('Should emit creatorUpdated', async function () {
+      await fb.createCreator("Suhas", "desc", 2, 10);
+      await expect(fb.updateCreator("Suhas2", "desc2", 1, 20)).to
+      .emit(fb, 'creatorUpdated')
+      .withArgs(owner.address, "Suhas2");
+    });
+    
   });
 });
