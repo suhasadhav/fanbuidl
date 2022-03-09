@@ -42,14 +42,16 @@ contract Fanbuidl {
 
     // Subscription structure 
     struct Subcscription {
-        address subscriber;
-        Creator creator;
+        address creator;
         uint startDate;
         uint endDate;
     }
 
     // Subscription Storage
     Subcscription[] public subscriptions;
+    
+    // Subscription list with addres=>(creator1, creator2)
+    mapping(address => uint[]) public subList;
     
     // Allows execution by only Owner
     modifier ownerOnly {
@@ -188,5 +190,21 @@ contract Fanbuidl {
         require(creatorList[msg.sender].active==true, "Your creator account is already deactivated");
         creatorList[msg.sender].active = false;
         emit creatorDeactivated(msg.sender, creatorList[msg.sender].accountName);
+    }
+
+    /*
+        Name: subscribeMe
+        Parameters:
+            - address
+    */
+    function subscribeMe(address creator) public payable{
+        require(creatorList[creator].check==true, "Creator does not exists");
+        require(creatorList[creator].active==true, "Creator account is deactivated");
+        
+        // Pay subscription fee and add it to creators balance
+        // Get fee in dollars not in ETH
+        //creatorList[creator]
+        subscriptions.push(Subcscription(creator, 10,20));
+        subList[msg.sender].push(subscriptions.length - 1);
     }
 }
