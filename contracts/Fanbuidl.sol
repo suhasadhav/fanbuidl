@@ -66,8 +66,8 @@ contract Fanbuidl {
     // New creator account created get address and account name
     event creatorCreated(address, string);
 
-    // Creator name updated returns address and accountName
-    event creatorNameUpdated(address, string);
+    // Creator updated returns address and accountName
+    event creatorUpdated(address, string);
 
     /*
         Constructor:
@@ -135,25 +135,37 @@ contract Fanbuidl {
         require(creatorList[msg.sender].check==true, "Your creator account does not exists");
         require(creatorList[msg.sender].active==true, "Your creator account is deactivated");
         require(_subFee < 1000000);
+        bool updated = false;
+
         if(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(""))){
             if(keccak256(abi.encodePacked(creatorList[msg.sender].accountName)) != keccak256(abi.encodePacked(_name))){
+                updated =true;
                 creatorList[msg.sender].accountName = _name;
             }
         }
         if(keccak256(abi.encodePacked(_desc)) != keccak256(abi.encodePacked(""))){
             if(keccak256(abi.encodePacked(creatorList[msg.sender].desription)) != keccak256(abi.encodePacked(_desc))){
+                updated =true;
                 creatorList[msg.sender].desription = _desc;
             }
         }
         if(_subType >= 0){
             if(creatorList[msg.sender].subType != SubscriptionType(uint8(_subType))){
+                updated =true;
                 creatorList[msg.sender].subType = SubscriptionType(uint8(_subType));
             }
         }
         if(_subFee >= 0){
             if(creatorList[msg.sender].subFee != uint24(_subFee)){
+                updated =true;
                 creatorList[msg.sender].subFee = uint24(_subFee);
             }
+        }
+        if(updated){
+            emit creatorUpdated(msg.sender, creatorList[msg.sender].accountName);
+        }
+        else{
+            revert("Nothing updated");
         }
     }
 
