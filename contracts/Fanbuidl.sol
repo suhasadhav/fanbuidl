@@ -28,7 +28,7 @@ contract Fanbuidl {
         string desription;
         uint balance;
         SubscriptionType subType;
-        uint subFee;
+        uint24 subFee;
         bool active;
         bool check;
     }
@@ -94,7 +94,12 @@ contract Fanbuidl {
             - subtype(SubscriptionType): subscription type activated (Weekly, Monthly, etc)
             - fee (uint): subscription fee for subtype selected
     */
-    function createCreator(string memory name, string memory desc, SubscriptionType subtype, uint fee) public{
+    function createCreator(
+        string memory name, 
+        string memory desc, 
+        SubscriptionType subtype, 
+        uint24 fee
+        ) public{
         require(creatorList[msg.sender].check==false, "Creator already exists");
         creators.push(Creator(name, desc, 0, subtype, fee, true, true));
         creatorList[msg.sender] = creators[creators.length - 1];
@@ -113,67 +118,43 @@ contract Fanbuidl {
     }
 
     /*
-        Name: updateCreatorName
+        Name: updateCreator
         Parameters:
-            - _name: New name to be updated
+            - _name (string): New name for the creator
+            - _desc (string): New description
+            - _subType (int8): Subscription type ( if no update send -1 )
+            - _subFee (uint24): Subscription fee ( if no update send -1 )
+        Usage: Update creator details for the calling address
     */
-    function updateCreatorName(string memory _name) public{
+    function updateCreator(
+        string memory _name, 
+        string memory _desc, 
+        int8 _subType, 
+        int24 _subFee
+        ) public {
         require(creatorList[msg.sender].check==true, "Your creator account does not exists");
-        require(creatorList[msg.sender].active==true, "Your creator account is deactivated, first activate it");
-        require(keccak256(abi.encodePacked((_name))) == keccak256(abi.encodePacked((""))),"Blank name updation not allowed");
-        require(keccak256(abi.encodePacked(creatorList[msg.sender].accountName)) != keccak256(abi.encodePacked(_name)), "Same Name updation failed");
-        creatorList[msg.sender].accountName = _name;
-        emit creatorNameUpdated(msg.sender,creatorList[msg.sender].accountName);
-    }
-    /*
-        Name: updateCreatorDesc
-        Parameters:
-            - _name: New desc to be updated
-
-
-        struct Creator {
-            string accountName;
-            string desription;
-            uint balance;
-            SubscriptionType subType;
-            uint subFee;
-            bool active;
-            bool check;
-        }
-            uint _subType, uint _subFee
-    */
-    function updateCreatorDesc(string memory _desc) public {
-        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
-        require(creatorList[msg.sender].active==true, "Your creator account is deactivated, first activate it");
-        require(keccak256(abi.encodePacked(_desc)) == keccak256(abi.encodePacked((""))),"Blank name updation not allowed");
-        require(keccak256(abi.encodePacked(creatorList[msg.sender].desription)) != keccak256(abi.encodePacked(_desc)), "Same Name updation failed");
-        creatorList[msg.sender].desription = _desc;
-        emit creatorNameUpdated(msg.sender,creatorList[msg.sender].accountName);
-    }
-
-
-    function updateCreator(string memory _name, string memory _desc, uint8 _subType, uint _subFee) public {
-        require(creatorList[msg.sender].check==true, "Your creator account does not exists");
-        require(creatorList[msg.sender].active==true, "Your creator account is deactivated, first activate it");
+        require(creatorList[msg.sender].active==true, "Your creator account is deactivated");
+        require(_subFee < 1000000);
         if(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(""))){
-            require(keccak256(abi.encodePacked(creatorList[msg.sender].accountName)) != keccak256(abi.encodePacked(_name)), "Same Name updation failed");
-            creatorList[msg.sender].accountName = _name;
+            if(keccak256(abi.encodePacked(creatorList[msg.sender].accountName)) != keccak256(abi.encodePacked(_name))){
+                creatorList[msg.sender].accountName = _name;
+            }
         }
-        
         if(keccak256(abi.encodePacked(_desc)) != keccak256(abi.encodePacked(""))){
-            require(keccak256(abi.encodePacked(creatorList[msg.sender].desription)) != keccak256(abi.encodePacked(_desc)), "Same description updation failed");
-            creatorList[msg.sender].desription = _desc;
+            if(keccak256(abi.encodePacked(creatorList[msg.sender].desription)) != keccak256(abi.encodePacked(_desc))){
+                creatorList[msg.sender].desription = _desc;
+            }
         }
-
-        if(_subType != 99){
-            require(creatorList[msg.sender].subType != SubscriptionType(_subType), "Same subscrition type updation failed");
-            creatorList[msg.sender].subType = SubscriptionType(_subType);
+        if(_subType >= 0){
+            if(creatorList[msg.sender].subType != SubscriptionType(uint8(_subType))){
+                creatorList[msg.sender].subType = SubscriptionType(uint8(_subType));
+            }
         }
-        if(_subFee != 999999){
-            require(creatorList[msg.sender].subFee != _subFee, "Same subscrition fee updation failed");
-            creatorList[msg.sender].subFee = _subFee;
+        if(_subFee >= 0){
+            if(creatorList[msg.sender].subFee != uint24(_subFee)){
+                creatorList[msg.sender].subFee = uint24(_subFee);
+            }
         }
-
     }
 
     /*
