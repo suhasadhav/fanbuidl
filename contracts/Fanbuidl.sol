@@ -28,13 +28,13 @@ contract Fanbuidl {
         string desription;
         uint balance;
         SubscriptionType subType;
-        uint24 subFee;
+        uint subFee;
         bool active;
         bool check;
     }
 
-    // Creator Storage
-    Creator[] public creators;
+    // Creator List
+    address[] public creators;
 
     // Key storage of creators array
     // creatorList[uint] will point to element in creators
@@ -50,7 +50,12 @@ contract Fanbuidl {
     // Subscription Storage
     Subcscription[] public subscriptions;
     
-    // Subscription list with addres=>(creator1, creator2)
+    /* 
+        Subscription list with address=>(creator1, creator2), So any address can subscribe to multiple creators
+        ex. addr1 => [cr1, cr2]
+            addr2 => [cr2, cr3]
+            here cr1, cr2, cr3 are indexes of subscriptions array (Subscription[])
+    */
     mapping(address => uint[]) public subList;
     
     // Allows execution by only Owner
@@ -100,11 +105,11 @@ contract Fanbuidl {
         string memory name, 
         string memory desc, 
         SubscriptionType subtype, 
-        uint24 fee
+        uint fee
         ) public{
         require(creatorList[msg.sender].check==false, "Creator already exists");
-        creators.push(Creator(name, desc, 0, subtype, fee, true, true));
-        creatorList[msg.sender] = creators[creators.length - 1];
+        creators.push(msg.sender);
+        creatorList[msg.sender] = Creator(name, desc, 0, subtype, fee, true, true);
         emit creatorCreated(msg.sender, creatorList[msg.sender].accountName);
     }
 
@@ -132,11 +137,10 @@ contract Fanbuidl {
         string memory _name, 
         string memory _desc, 
         int8 _subType, 
-        int24 _subFee
+        int _subFee
         ) public {
         require(creatorList[msg.sender].check==true, "Creator does not exists");
         require(creatorList[msg.sender].active==true, "Your creator account is deactivated");
-        require(_subFee < 1000000);
         bool updated = false;
 
         if(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(""))){
@@ -158,9 +162,9 @@ contract Fanbuidl {
             }
         }
         if(_subFee >= 0){
-            if(creatorList[msg.sender].subFee != uint24(_subFee)){
+            if(creatorList[msg.sender].subFee != uint(_subFee)){
                 updated =true;
-                creatorList[msg.sender].subFee = uint24(_subFee);
+                creatorList[msg.sender].subFee = uint(_subFee);
             }
         }
         if(updated){
@@ -197,14 +201,27 @@ contract Fanbuidl {
         Parameters:
             - address
     */
-    function subscribeMe(address creator) public payable{
+    function subscribeMe(address payable creator) public payable{
         require(creatorList[creator].check==true, "Creator does not exists");
         require(creatorList[creator].active==true, "Creator account is deactivated");
-        
-        // Pay subscription fee and add it to creators balance
-        // Get fee in dollars not in ETH
-        //creatorList[creator]
-        subscriptions.push(Subcscription(creator, 10,20));
+        creator.transfer(creatorList[creator].subFee);
+        creatorList[creator].balance += creatorList[creator].subFee;
+        subscriptions.push(Subcscription(creator, 10, 20));
         subList[msg.sender].push(subscriptions.length - 1);
+    }
+
+    function withdrawFunds() public payable ownerOnly{
+
+    }
+
+
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 }
