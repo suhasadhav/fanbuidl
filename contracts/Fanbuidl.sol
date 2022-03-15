@@ -76,6 +76,7 @@ contract Fanbuidl {
     // Creator updated returns address and accountName
     event creatorUpdated(address, string);
 
+    event fundsReceived(address);
     /*
         Constructor:
             - Setup owner address ( who deploys this contract for admin purpose)
@@ -201,10 +202,19 @@ contract Fanbuidl {
         Parameters:
             - address
     */
-    function subscribeMe(address payable creator) public payable{
+    function subscribeMe(address creator) public payable{
         require(creatorList[creator].check==true, "Creator does not exists");
         require(creatorList[creator].active==true, "Creator account is deactivated");
-        creator.transfer(creatorList[creator].subFee);
+
+        uint[] memory indexes = subList[msg.sender];
+        for (uint i=0; i<indexes.length; i++){
+            require(subscriptions[indexes[i]].creator!=creator, "Already subscribed to this creator");
+        }
+        //(bool sent,) = address(this).call{value: creatorList[creator].subFee*10^18}("");
+        //require(sent, "Failed to send Ether");
+
+//        payable(address(this)).transfer(creatorList[creator].subFee*10^18);
+
         creatorList[creator].balance += creatorList[creator].subFee;
         subscriptions.push(Subcscription(creator, 10, 20));
         subList[msg.sender].push(subscriptions.length - 1);
@@ -216,7 +226,9 @@ contract Fanbuidl {
 
 
     // Function to receive Ether. msg.data must be empty
-    receive() external payable {}
+    receive() external payable {
+        emit fundsReceived(msg.sender);
+    }
 
     // Fallback function is called when msg.data is not empty
     fallback() external payable {}
