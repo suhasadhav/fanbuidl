@@ -19,6 +19,7 @@
     "hardhat": "^2.9.0"
   },
   "dependencies": {
+    "@chainlink/contracts": "^0.4.0",
     "@openzeppelin/contracts-ethereum-package": "^3.0.0",
     "openzeppelin-solidity": "^4.5.0"
   }

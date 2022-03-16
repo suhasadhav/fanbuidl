@@ -14,20 +14,12 @@ contract Fanbuidl {
     // Contract owner address
     address public immutable owner;
 
-    // Subscription Type for any creator
-    enum SubscriptionType {
-        Weekly,
-        Monthly,
-        Quarterly,
-        Yearly
-    }
-
     // Content Creator Structure
     struct Creator {
         string accountName;
         string desription;
         uint balance;
-        SubscriptionType subType;
+        uint subDays;
         uint subFee;
         bool active;
         bool check;
@@ -105,12 +97,12 @@ contract Fanbuidl {
     function createCreator(
         string memory name, 
         string memory desc, 
-        SubscriptionType subtype, 
+        uint subdays, 
         uint fee
         ) public{
         require(creatorList[msg.sender].check==false, "Creator already exists");
         creators.push(msg.sender);
-        creatorList[msg.sender] = Creator(name, desc, 0, subtype, fee, true, true);
+        creatorList[msg.sender] = Creator(name, desc, 0, subdays, fee, true, true);
         emit creatorCreated(msg.sender, creatorList[msg.sender].accountName);
     }
 
@@ -137,7 +129,7 @@ contract Fanbuidl {
     function updateCreator(
         string memory _name, 
         string memory _desc, 
-        int8 _subType, 
+        uint subdays, 
         int _subFee
         ) public {
         require(creatorList[msg.sender].check==true, "Creator does not exists");
@@ -156,10 +148,10 @@ contract Fanbuidl {
                 creatorList[msg.sender].desription = _desc;
             }
         }
-        if(_subType >= 0){
-            if(creatorList[msg.sender].subType != SubscriptionType(uint8(_subType))){
+        if(subdays >= 0){
+            if(creatorList[msg.sender].subDays != subdays){
                 updated =true;
-                creatorList[msg.sender].subType = SubscriptionType(uint8(_subType));
+                creatorList[msg.sender].subDays = subdays;
             }
         }
         if(_subFee >= 0){
@@ -202,28 +194,41 @@ contract Fanbuidl {
         Parameters:
             - address
     */
-    function subscribeMe(address creator) public payable{
+    function subscribeMe(address creator) payable external{
+        require(msg.sender.balance>=creatorList[creator].subFee, "Insufficient Balance");
         require(creatorList[creator].check==true, "Creator does not exists");
         require(creatorList[creator].active==true, "Creator account is deactivated");
 
         uint[] memory indexes = subList[msg.sender];
-        for (uint i=0; i<indexes.length; i++){
-            require(subscriptions[indexes[i]].creator!=creator, "Already subscribed to this creator");
+        bool expired;
+        uint i;
+        for (i=0; i<indexes.length; i++){
+            if(subscriptions[indexes[i]].creator==creator){
+                expired = subscriptions[indexes[i]].endDate<block.timestamp;
+                require(!expired, "Already subscribed to this creator");
+                break;
+            }
         }
-        //(bool sent,) = address(this).call{value: creatorList[creator].subFee*10^18}("");
-        //require(sent, "Failed to send Ether");
 
-//        payable(address(this)).transfer(creatorList[creator].subFee*10^18);
-
-        creatorList[creator].balance += creatorList[creator].subFee;
-        subscriptions.push(Subcscription(creator, 10, 20));
-        subList[msg.sender].push(subscriptions.length - 1);
+        payable(address(this)).transfer(creatorList[creator].subFee);
+        uint _end = block.timestamp + (creatorList[creator].subDays * 1 days);
+        if(expired){
+            subscriptions[indexes[i]].startDate = block.timestamp;
+            subscriptions[indexes[i]].endDate = _end;
+        }else{
+            creatorList[creator].balance += creatorList[creator].subFee;
+            subscriptions.push(Subcscription(creator, block.timestamp, _end));
+            subList[msg.sender].push(subscriptions.length - 1);
+        }        
     }
 
     function withdrawFunds() public payable ownerOnly{
 
     }
-
+    
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
 
     // Function to receive Ether. msg.data must be empty
     receive() external payable {
@@ -232,8 +237,4 @@ contract Fanbuidl {
 
     // Fallback function is called when msg.data is not empty
     fallback() external payable {}
-
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
-    }
 }
