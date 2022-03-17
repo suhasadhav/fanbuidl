@@ -191,11 +191,14 @@ contract Fanbuidl {
 
     /*
         Name: subscribeMe
+            Subscribe current user to the passed creator address
         Parameters:
             - address
     */
     function subscribeMe(address creator) payable external{
+        require(creator!=msg.sender, "No need to subscribe to own content!");
         require(msg.sender.balance>=creatorList[creator].subFee, "Insufficient Balance");
+        require(msg.value==creatorList[creator].subFee, "Send Subscription fee");
         require(creatorList[creator].check==true, "Creator does not exists");
         require(creatorList[creator].active==true, "Creator account is deactivated");
 
@@ -205,21 +208,20 @@ contract Fanbuidl {
         for (i=0; i<indexes.length; i++){
             if(subscriptions[indexes[i]].creator==creator){
                 expired = subscriptions[indexes[i]].endDate<block.timestamp;
-                require(!expired, "Already subscribed to this creator");
+                require(expired, "Already subscribed to this creator");
                 break;
             }
         }
-
-        payable(address(this)).transfer(creatorList[creator].subFee);
+        payable(address(this)).transfer(msg.value);
         uint _end = block.timestamp + (creatorList[creator].subDays * 1 days);
         if(expired){
             subscriptions[indexes[i]].startDate = block.timestamp;
             subscriptions[indexes[i]].endDate = _end;
         }else{
-            creatorList[creator].balance += creatorList[creator].subFee;
             subscriptions.push(Subcscription(creator, block.timestamp, _end));
             subList[msg.sender].push(subscriptions.length - 1);
-        }        
+        }
+        creatorList[creator].balance += creatorList[creator].subFee;
     }
 
     function withdrawFunds() public payable ownerOnly{
