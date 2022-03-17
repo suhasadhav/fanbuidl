@@ -68,7 +68,9 @@ contract Fanbuidl {
     // Creator updated returns address and accountName
     event creatorUpdated(address, string);
 
-    event fundsReceived(address);
+    // Funds received to the Contract
+    event fundsReceived(address, uint);
+    
     /*
         Constructor:
             - Setup owner address ( who deploys this contract for admin purpose)
@@ -148,13 +150,13 @@ contract Fanbuidl {
                 creatorList[msg.sender].desription = _desc;
             }
         }
-        if(subdays >= 0){
+        if(subdays != 0){
             if(creatorList[msg.sender].subDays != subdays){
-                updated =true;
+                updated = true;
                 creatorList[msg.sender].subDays = subdays;
             }
         }
-        if(_subFee >= 0){
+        if(_subFee != 0){
             if(creatorList[msg.sender].subFee != uint(_subFee)){
                 updated =true;
                 creatorList[msg.sender].subFee = uint(_subFee);
@@ -213,6 +215,7 @@ contract Fanbuidl {
             }
         }
         payable(address(this)).transfer(msg.value);
+        emit fundsReceived(msg.sender, msg.value);
         uint _end = block.timestamp + (creatorList[creator].subDays * 1 days);
         if(expired){
             subscriptions[indexes[i]].startDate = block.timestamp;
@@ -234,7 +237,7 @@ contract Fanbuidl {
 
     // Function to receive Ether. msg.data must be empty
     receive() external payable {
-        emit fundsReceived(msg.sender);
+        emit fundsReceived(msg.sender, msg.value);
     }
 
     // Fallback function is called when msg.data is not empty

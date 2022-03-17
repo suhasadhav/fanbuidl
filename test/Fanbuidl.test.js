@@ -33,28 +33,28 @@ describe("Fanbuidl Creator", function () {
       // Check all data in creator array
       expect(acc).to.have.deep.property("accountName", "Suhas");
       expect(acc).to.have.deep.property("desription", "This is description for the creator and his/her content and can be long");
-      expect(acc).to.have.deep.property("subType", 2);
+      expect(acc).to.have.deep.property("subDays").to.equal(2);
       expect(acc).to.have.deep.property("subFee").to.equal(10);    
       expect(acc).to.have.deep.property("balance").to.equal(0);
     });
     
     it('Should updateCreator(single field) if exists and activated', async function () {
       await fb.createCreator("Suhas", "This is description", 2, 10);
-      await fb.updateCreator("Suhas2", "", -1,-1);
+      await fb.updateCreator("Suhas2", "", 0, 0);
       acc = await fb.getCreator(owner.address);
       expect(acc).to.have.deep.property("accountName", "Suhas2");
       expect(acc).to.have.deep.property("desription", "This is description");
-      expect(acc).to.have.deep.property("subType", 2);
+      expect(acc).to.have.deep.property("subDays").to.equal(2);
       expect(acc).to.have.deep.property("subFee").to.equal(10);
     });
 
     it('Should updateCreator(multiple fields) if exists and activated', async function () {
       await fb.createCreator("Suhas", "This is description", 2, 10);
-      await fb.updateCreator("Suhas2", "", -1, 20);
+      await fb.updateCreator("Suhas2", "", 0, 20);
       acc = await fb.getCreator(owner.address);
       expect(acc).to.have.deep.property("accountName", "Suhas2");
       expect(acc).to.have.deep.property("desription", "This is description");
-      expect(acc).to.have.deep.property("subType", 2);
+      expect(acc).to.have.deep.property("subDays").to.equal(2);
       expect(acc).to.have.deep.property("subFee").to.equal(20);
     });
 
@@ -64,7 +64,7 @@ describe("Fanbuidl Creator", function () {
       acc = await fb.getCreator(owner.address);
       expect(acc).to.have.deep.property("accountName", "Suhas2");
       expect(acc).to.have.deep.property("desription", "desc2");
-      expect(acc).to.have.deep.property("subType", 1);
+      expect(acc).to.have.deep.property("subDays").to.equal(1);
       expect(acc).to.have.deep.property("subFee").to.equal(20);
     });
 
@@ -141,6 +141,57 @@ describe("Fanbuidl Creator", function () {
       .emit(fb, 'creatorUpdated')
       .withArgs(owner.address, "Suhas2");
     });
+    
+  });
+});
+
+describe("Fanbuidl Subscription", function() {
+  describe("SUCCESS", function () {
+    
+  });
+
+  describe("FAILURE", function () {    
+    it("Should revert subscribeMe for own account", async function(){
+      await fb.createCreator("Suhas", "desc", 2, 10);
+      await expect(fb.subscribeMe(owner.address))
+        .to.revertedWith("No need to subscribe to own content!");
+    });
+
+    it("Should revert subscribeMe for insufficient balance", async function(){
+      const balance = await addr1.getBalance();
+      await fb.createCreator("Suhas", "desc", 2, balance+200);
+      await expect(fb.connect(addr1).subscribeMe(owner.address))
+        .to.revertedWith("Insufficient Balance");
+    });
+
+    it("Should revert subscribeMe for wrong Subscription Fee", async function(){
+      await fb.createCreator("Suhas", "desc", 2, 500);
+      await expect(fb.connect(addr1).subscribeMe(owner.address, {value: 501}))
+        .to.revertedWith("Send Subscription fee");
+    });
+
+    it("Should revert subscribeMe for non existing Creator", async function(){
+      await expect(fb.connect(addr1).subscribeMe(owner.address))
+        .to.revertedWith("Creator does not exists");
+    });
+    
+    it("Should revert subscribeMe for deactivated Creator", async function(){
+      await fb.createCreator("Suhas", "This is description", 2, 1000);
+      await (fb.deactivateCreator());
+      await expect(fb.connect(addr1).subscribeMe(owner.address, {value: 1000}))
+        .to.revertedWith("Creator account is deactivated");
+    });
+
+    it("Should revert subscribeMe for duplicate subscription", async function(){
+      await fb.createCreator("Suhas", "This is description", 2, 1000);
+      await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
+      await expect(fb.connect(addr1).subscribeMe(owner.address, {value: 1000}))
+        .to.revertedWith("Already subscribed to this creator");
+    });
+
+  });
+
+  describe("EVENTS", function () {
     
   });
 });
