@@ -147,7 +147,28 @@ describe("Fanbuidl Creator", function () {
 
 describe("Fanbuidl Subscription", function() {
   describe("SUCCESS", function () {
-    
+    it("Should have balance added to creator account & Contract", async function(){
+      await fb.createCreator("Suhas", "desc", 30, 1000);
+      await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
+      acc = await fb.getCreator(owner.address);
+      expect(acc).to.have.deep.property("balance").to.equal(1000);
+      const balance = await fb.getBalance();
+      expect(balance).to.equal(1000);
+    });
+
+    it("Should have subscription in the list", async function(){
+      await fb.createCreator("Suhas", "desc", 30, 1000);
+      await fb.connect(addr2).createCreator("Adhav", "desc", 30, 2000);
+
+      await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
+      await fb.connect(addr1).subscribeMe(addr2.address, {value: 2000});
+
+      //x = await fb.subList({});
+      //x = await fb.getSubscriptions(addr1.address);
+      //console.log(x);
+    });
+
+
   });
 
   describe("FAILURE", function () {    

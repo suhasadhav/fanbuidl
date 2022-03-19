@@ -227,6 +227,14 @@ contract Fanbuidl {
         creatorList[creator].balance += creatorList[creator].subFee;
     }
 
+    function getSubscriptions(address subscriber) public view returns(uint[] memory){
+        uint[] memory x = subList[subscriber];
+        for(uint i=0; i<x.length; i++){
+            
+        }
+        return subList[subscriber];
+    }
+
     function withdrawFunds() public payable ownerOnly{
 
     }
