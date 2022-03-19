@@ -227,13 +227,44 @@ contract Fanbuidl {
         creatorList[creator].balance += creatorList[creator].subFee;
     }
 
-    function getSubscriptions(address subscriber) public view returns(uint[] memory){
-        uint[] memory x = subList[subscriber];
-        for(uint i=0; i<x.length; i++){
-            
+    /*
+        Name: getActiveSubscriptions
+            Get creator address array of subscriber for which subscription is Active
+        Parameters:
+            - address of subscriber
+    */
+    function getActiveSubscriptions(address subscriber) public view returns(Subcscription[] memory){
+        uint x = subList[subscriber].length;
+        Subcscription[] memory activeSubs = new Subcscription[](x);
+        uint j=0;
+        for(uint i=0; i < x; i++){
+            if(subscriptions[i].endDate>block.timestamp){
+                activeSubs[j] = subscriptions[i];
+                j+=1;
+            }
         }
-        return subList[subscriber];
+        return activeSubs;
     }
+
+    /*
+        Name: getExpiredSubscriptions
+            Get creator address array of subscriber for which subscription is expired
+        Parameters:
+            - address of subscriber
+    */
+    function getExpiredSubscriptions(address subscriber) public view returns(Subcscription[] memory){
+        uint x = subList[subscriber].length;
+        Subcscription[] memory expiredSubs = new Subcscription[](x);
+        uint j=0;
+        for(uint i=0; i < x; i++){
+            if(subscriptions[i].endDate<block.timestamp){
+                expiredSubs[j] = subscriptions[i];
+                j+=1;
+            }
+        }
+        return expiredSubs;
+    }
+
 
     function withdrawFunds() public payable ownerOnly{
 

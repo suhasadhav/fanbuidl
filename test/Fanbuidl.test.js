@@ -158,16 +158,38 @@ describe("Fanbuidl Subscription", function() {
 
     it("Should have subscription in the list", async function(){
       await fb.createCreator("Suhas", "desc", 30, 1000);
-      await fb.connect(addr2).createCreator("Adhav", "desc", 30, 2000);
+      await fb.connect(addr2).createCreator("Adhav", "desc", 10, 2000);
 
       await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
       await fb.connect(addr1).subscribeMe(addr2.address, {value: 2000});
-
-      //x = await fb.subList({});
-      //x = await fb.getSubscriptions(addr1.address);
-      //console.log(x);
+      x = await fb.getActiveSubscriptions(addr1.address);
+      expect(x[0].creator).to.equal(owner.address);
+      expect(x[1].creator).to.equal(addr2.address);
+      expect(await fb.getBalance()).to.equal(3000);
+      expect(await fb.getCreator(owner.address)).to.have.deep.property("balance").to.equal(1000);
+      expect(await fb.getCreator(addr2.address)).to.have.deep.property("balance").to.equal(2000);
     });
 
+    it("Should have correct Subscription enddate", async function(){
+      await fb.createCreator("Suhas", "desc", 30, 1000);
+      await fb.connect(addr2).createCreator("Adhav", "desc", 10, 2000);
+
+      //xy = await ethers.provider.send('evm_setNextBlockTimestamp', [now]);
+      await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
+      await fb.connect(addr1).subscribeMe(addr2.address, {value: 2000});
+
+      const blockNumBefore = await ethers.provider.getBlockNumber();
+      const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+      const timestampBefore = blockBefore.timestamp;
+
+      x = await fb.getActiveSubscriptions(addr1.address);
+      //expect timestamp to be less than 1 as owner subscription happened earlier
+      // 1 block previously, with 30 days subscription
+      expect(x[0].endDate).to.equal(timestampBefore + 30*60*60*24 - 1 );
+
+      //expect timestamp to be exactly equal with 10 days subscription
+      expect(x[1].endDate).to.equal(timestampBefore + 10*60*60*24);
+    });
 
   });
 
