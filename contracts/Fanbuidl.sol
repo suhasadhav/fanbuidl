@@ -70,6 +70,10 @@ contract Fanbuidl {
 
     // Funds received to the Contract
     event fundsReceived(address, uint);
+
+    // Subscription Event
+    // (subscriber, creator, startDate, endDate, subFee)
+    event gotSubscribed(address, address, uint, uint, uint);
     
     /*
         Constructor:
@@ -215,7 +219,6 @@ contract Fanbuidl {
             }
         }
         payable(address(this)).transfer(msg.value);
-        emit fundsReceived(msg.sender, msg.value);
         uint _end = block.timestamp + (creatorList[creator].subDays * 1 days);
         if(expired){
             subscriptions[indexes[i]].startDate = block.timestamp;
@@ -224,7 +227,9 @@ contract Fanbuidl {
             subscriptions.push(Subcscription(creator, block.timestamp, _end));
             subList[msg.sender].push(subscriptions.length - 1);
         }
+
         creatorList[creator].balance += creatorList[creator].subFee;
+        emit gotSubscribed(msg.sender, creator, block.timestamp, _end, creatorList[creator].subFee);
     }
 
     /*

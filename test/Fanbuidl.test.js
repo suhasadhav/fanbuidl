@@ -174,7 +174,6 @@ describe("Fanbuidl Subscription", function() {
       await fb.createCreator("Suhas", "desc", 30, 1000);
       await fb.connect(addr2).createCreator("Adhav", "desc", 10, 2000);
 
-      //xy = await ethers.provider.send('evm_setNextBlockTimestamp', [now]);
       await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
       await fb.connect(addr1).subscribeMe(addr2.address, {value: 2000});
 
@@ -235,6 +234,19 @@ describe("Fanbuidl Subscription", function() {
   });
 
   describe("EVENTS", function () {
+    it('Should emit gotSubscribed', async function () {
+      await fb.createCreator("Suhas", "desc", 30, 1000);
+      //await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
+
+      const blockNumBefore = await ethers.provider.getBlockNumber();
+      const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+      const timestampBefore = blockBefore.timestamp + 1;
+
+      await expect(fb.connect(addr1).subscribeMe(owner.address, {value: 1000})).to
+      .emit(fb, 'gotSubscribed')
+      .withArgs(addr1.address, owner.address, timestampBefore, timestampBefore+30*60*60*24, 1000)
+      ;
+    });
     
   });
 });
