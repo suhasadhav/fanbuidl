@@ -151,7 +151,10 @@ describe("Fanbuidl Subscription", function() {
       await fb.createCreator("Suhas", "desc", 30, 1000);
       await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
       acc = await fb.getCreator(owner.address);
-      expect(acc).to.have.deep.property("balance").to.equal(1000);
+      
+      expect(acc).to.have.deep.property("balance").to.equal(900);
+      // 10% charge
+      expect(await fb.collectedFee()).to.equal(100);
       const balance = await fb.getBalance();
       expect(balance).to.equal(1000);
     });
@@ -166,8 +169,9 @@ describe("Fanbuidl Subscription", function() {
       expect(x[0].creator).to.equal(owner.address);
       expect(x[1].creator).to.equal(addr2.address);
       expect(await fb.getBalance()).to.equal(3000);
-      expect(await fb.getCreator(owner.address)).to.have.deep.property("balance").to.equal(1000);
-      expect(await fb.getCreator(addr2.address)).to.have.deep.property("balance").to.equal(2000);
+      expect(await fb.getCreator(owner.address)).to.have.deep.property("balance").to.equal(900);
+      expect(await fb.getCreator(addr2.address)).to.have.deep.property("balance").to.equal(1800);
+      expect(await fb.collectedFee()).to.equal(300);
     });
 
     it("Should have correct Subscription enddate", async function(){

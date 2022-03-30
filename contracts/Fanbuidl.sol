@@ -14,6 +14,15 @@ contract Fanbuidl {
     // Contract owner address
     address public immutable owner;
 
+    // Percent Fee charged by contract to creator
+    uint8 public creatorFee;
+
+    // Total collected fee from creators
+    uint public collectedFee;
+
+    // Withdraw Lock
+    bool public withdrawLock;
+
     // Content Creator Structure
     struct Creator {
         string accountName;
@@ -75,12 +84,15 @@ contract Fanbuidl {
     // (subscriber, creator, startDate, endDate, subFee)
     event gotSubscribed(address, address, uint, uint, uint);
     
+    event feeCollected(address, uint);
+
     /*
         Constructor:
             - Setup owner address ( who deploys this contract for admin purpose)
     */
     constructor() {
         owner = msg.sender;
+        creatorFee = 10;
     }
 
     /*
@@ -228,8 +240,12 @@ contract Fanbuidl {
             subList[msg.sender].push(subscriptions.length - 1);
         }
 
-        creatorList[creator].balance += creatorList[creator].subFee;
+        uint contractFee;
+        contractFee = msg.value * creatorFee / 100;
+        creatorList[creator].balance += (creatorList[creator].subFee - contractFee);
+        collectedFee += contractFee;
         emit gotSubscribed(msg.sender, creator, block.timestamp, _end, creatorList[creator].subFee);
+        emit feeCollected(msg.sender, contractFee);
     }
 
     /*
@@ -270,9 +286,17 @@ contract Fanbuidl {
         return expiredSubs;
     }
 
-
+    /*
+        Name: withdrawFunds
+            Withdraw funds which are not part of the totalbalance
+    */
     function withdrawFunds() public payable ownerOnly{
-
+        require(msg.value <= collectedFee, "Insufficient funds");
+        require(withdrawLock==false, "Withdraw Locked");
+        withdrawLock=true;
+        payable(owner).transfer(msg.value);
+        collectedFee -= msg.value;
+        withdrawLock=false;
     }
     
     function getBalance() public view returns (uint) {
