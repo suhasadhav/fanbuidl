@@ -261,3 +261,55 @@ describe("Fanbuidl Subscription", function() {
     
   });
 });
+
+describe("Admin Functions", function(){
+  describe("SUCCESS", function () {
+    it("Should set correct fee", async function(){
+    await fb.setCreatorFee(20);
+    expect(await fb.creatorFee()).to.equal(20);
+    });
+
+    it("Should deduct correct fee", async function(){
+      await fb.setCreatorFee(20);
+      await fb.createCreator("Suhas", "desc", 30, 1000);
+      await fb.connect(addr1).subscribeMe(owner.address, {value: 1000});
+      acc = await fb.getCreator(owner.address);
+      expect(acc).to.have.deep.property("balance").to.equal(800);
+      // 20% charge
+      expect(await fb.collectedFee()).to.equal(200);
+      expect(await fb.creatorFee()).to.equal(20);
+      });
+
+      //Need to fix this function as tests are failing for this
+      it("Should withdraw collectedFee", async function(){
+        const balance = await owner.getBalance();
+        await fb.createCreator("Suhas", "desc", 30, "100000000000000000");
+        await fb.connect(addr1).subscribeMe(owner.address, {value: "100000000000000000"});
+        expect(await fb.collectedFee()).to.equal("10000000000000000");
+        await fb.connect(owner).withdrawFunds("10000000000");
+        expect(await owner.getBalance()).to.gte(balance);
+        //expect(await fb.collectedFee()).to.equal(0);
+        });
+  });
+  describe("FAILURE", function () {
+    it("Should revert setCreatorFee for more than 50% fee", async function(){
+      await expect(fb.setCreatorFee(60))
+      .to.revertedWith("More than 50%");
+    });
+
+    it("Should revert setCreatorFee for same perc", async function(){
+      await expect(fb.setCreatorFee(10))
+      .to.revertedWith("Already set");
+    });
+    
+    //Need to fix this function as tests are failing for this
+    it("Should revert withdrawFunds for insufficient funds", async function(){
+      await fb.createCreator("Suhas", "desc", 30, "100");
+      await fb.connect(addr1).subscribeMe(owner.address, {value: "100"});
+      expect(await fb.collectedFee()).to.equal("10");
+      expect(await fb.connect(owner).withdrawFunds("200")).to.revertedWith("Insufficient funds");
+      });
+
+
+  });
+});

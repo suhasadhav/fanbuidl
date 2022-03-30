@@ -290,12 +290,12 @@ contract Fanbuidl {
         Name: withdrawFunds
             Withdraw funds which are not part of the totalbalance
     */
-    function withdrawFunds() public payable ownerOnly{
-        require(msg.value <= collectedFee, "Insufficient funds");
+    function withdrawFunds(uint _amount) public payable ownerOnly{
+        require(_amount < collectedFee, "Insufficient funds");
         require(withdrawLock==false, "Withdraw Locked");
         withdrawLock=true;
-        payable(owner).transfer(msg.value);
-        collectedFee -= msg.value;
+        payable(owner).transfer(_amount);
+        collectedFee -= _amount;
         withdrawLock=false;
     }
 
