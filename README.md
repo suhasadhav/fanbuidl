@@ -18,6 +18,9 @@ There are different entities in the system:
 # Development & Contribution
 Project is developed with hardhat and ReactJS
 
+
+# Frontend
+Frontend is created using create-react-app 
 ```shell
 npx hardhat accounts
 npx hardhat compile
