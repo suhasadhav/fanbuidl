@@ -1,8 +1,22 @@
-# Basic Sample Hardhat Project
+# Fanbuidl
+Fanbuidl is content based subscription system created using web3 technologies.
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+There are different entities in the system:
+- Creator: Creates content
+- Subscriber: Subscribes to the content created by Creator
+- Admin: Contract Owner who administrates overall project
 
-Try running some of the following tasks:
+## Creator
+
+
+## Subscriber
+
+
+## Admin
+
+
+# Development & Contribution
+Project is developed with hardhat and ReactJS
 
 ```shell
 npx hardhat accounts

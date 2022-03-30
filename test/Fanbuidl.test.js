@@ -301,7 +301,7 @@ describe("Admin Functions", function(){
       await expect(fb.setCreatorFee(10))
       .to.revertedWith("Already set");
     });
-    
+
     //Need to fix this function as tests are failing for this
     it("Should revert withdrawFunds for insufficient funds", async function(){
       await fb.createCreator("Suhas", "desc", 30, "100");
@@ -309,7 +309,6 @@ describe("Admin Functions", function(){
       expect(await fb.collectedFee()).to.equal("10");
       expect(await fb.connect(owner).withdrawFunds("200")).to.revertedWith("Insufficient funds");
       });
-
-
+      
   });
 });
