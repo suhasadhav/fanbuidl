@@ -109,7 +109,7 @@ contract Fanbuidl {
         parameters: 
             - name (string): Name of the creator
             - desc (string): Description
-            - subtype(SubscriptionType): subscription type activated (Weekly, Monthly, etc)
+            - subdays(uint): Subscription days
             - fee (uint): subscription fee for subtype selected
     */
     function createCreator(
@@ -297,6 +297,16 @@ contract Fanbuidl {
         payable(owner).transfer(msg.value);
         collectedFee -= msg.value;
         withdrawLock=false;
+    }
+
+    /*
+        Name: setCreatorFee
+            Set creator fees percentage for the contract
+    */
+    function setCreatorFee(uint8 _fee) public ownerOnly{
+        require(creatorFee!= _fee, "Already set");
+        require(_fee<50, "More than 50%");
+        creatorFee=_fee;
     }
     
     function getBalance() public view returns (uint) {

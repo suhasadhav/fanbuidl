@@ -251,6 +251,13 @@ describe("Fanbuidl Subscription", function() {
       .withArgs(addr1.address, owner.address, timestampBefore, timestampBefore+30*60*60*24, 1000)
       ;
     });
+    it('Should emit feeCollected', async function () {
+      await fb.createCreator("Suhas", "desc", 30, 1000);
+      await expect(fb.connect(addr1).subscribeMe(owner.address, {value: 1000})).to
+      .emit(fb, 'feeCollected')
+      .withArgs(addr1.address, 100)
+      ;
+    });
     
   });
 });
