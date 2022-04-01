@@ -1,11 +1,13 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { createRoot } from 'react-dom/client';
-import './assets/styles/index.css';
-import App from './components/App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { createRoot } from "react-dom/client";
+import "./assets/styles/index.css";
+import App from "./components/App";
+import reportWebVitals from "./reportWebVitals";
 
-const container = document.getElementById('root');
+//import { CreatorForm } from "./components/CreatorForm";
+
+const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(<App tab="home" />);
 
