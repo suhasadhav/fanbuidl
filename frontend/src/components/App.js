@@ -29,7 +29,6 @@ export class App extends React.Component {
 
   // Check if correct network is selected or not
   _checkNetwork() {
-    console.log(window.ethereum.networkVersion);
     if (window.ethereum.networkVersion === NETWORK_ID) {
       return true;
     }
