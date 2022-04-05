@@ -24,7 +24,7 @@ export class App extends React.Component {
     this.setState({
       selectedAddress: userAddress,
     });
-    localStorage.setItem('isWalletConnected', true);
+    localStorage.setItem("isWalletConnected", true);
   }
 
   // Check if correct network is selected or not
@@ -32,7 +32,7 @@ export class App extends React.Component {
     if (window.ethereum.networkVersion === NETWORK_ID) {
       return true;
     }
-    
+
     this.setState({
       networkError: "Please connect your wallet to NETWORK ID: " + NETWORK_ID,
     });
@@ -43,7 +43,7 @@ export class App extends React.Component {
   // This method resets the state
   _resetState() {
     this.setState(this.initialState);
-    localStorage.setItem('isWalletConnected', false);
+    localStorage.setItem("isWalletConnected", false);
   }
 
   // This method just clears part of the state.
@@ -53,12 +53,12 @@ export class App extends React.Component {
 
   async _connectWallet() {
     const { ethereum } = window;
-    const walletConnected = localStorage.getItem('isWalletConnected');
+    const walletConnected = localStorage.getItem("isWalletConnected");
     if (!ethereum) {
       alert("No wallet found");
     } else {
       try {
-        if(!walletConnected){
+        if (!walletConnected) {
           if (!this._checkNetwork()) {
             return;
           }
@@ -91,16 +91,17 @@ export class App extends React.Component {
     }
   }
 
-componentDidMount(){
-  if (localStorage.getItem('isWalletConnected') === 'true') {
-    try {
-      this._connectWallet();
-      localStorage.setItem('isWalletConnected', true);
-    } catch (ex) {
-      console.log(ex);
+  componentDidMount() {
+    if (localStorage.getItem("isWalletConnected") === "true") {
+      try {
+        this._connectWallet();
+        localStorage.setItem("isWalletConnected", true);
+      } catch (ex) {
+        console.log(ex);
+      }
     }
   }
-}
+
   render() {
     // Ethereum wallets inject the window.ethereum object. If it hasn't been
     // injected, we instruct the user to install MetaMask.
@@ -122,11 +123,9 @@ componentDidMount(){
     // If everything is loaded, we render the application.
     return (
       <div className="container">
-        <Navigation ></Navigation>
+        <Navigation address={this.state.selectedAddress}></Navigation>
         <Row className="mx-0">
-          <Col xs={5}>
-            
-          </Col>
+          <Col xs={5}></Col>
         </Row>
       </div>
     );

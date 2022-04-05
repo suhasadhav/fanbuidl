@@ -1,5 +1,8 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css"; //REMOVE THIS
+import "./assets/css/argon-dashboard-react.css";
+import "./assets/plugins/nucleo/css/nucleo.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createRoot } from "react-dom/client";
 import "./assets/styles/index.css";
 import App from "./components/App";
