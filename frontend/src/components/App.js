@@ -1,7 +1,8 @@
 import React from "react";
 import "../assets/styles/App.css";
-import { Button, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { ConnectWallet } from "./ConnectWallet";
+import { Navigation } from "./Navigation";
 //import { useState, setState } from "react";
 
 const NETWORK_ID = "31337";
@@ -107,9 +108,10 @@ export class App extends React.Component {
     // If everything is loaded, we render the application.
     return (
       <div className="container">
+        <Navigation ></Navigation>
         <Row className="mx-0">
           <Col xs={5}>
-            <Button variant="outline-primary">Enter App</Button>{" "}
+            
           </Col>
         </Row>
       </div>
