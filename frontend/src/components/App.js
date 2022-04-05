@@ -24,14 +24,16 @@ export class App extends React.Component {
     this.setState({
       selectedAddress: userAddress,
     });
+    localStorage.setItem('isWalletConnected', true);
   }
 
   // Check if correct network is selected or not
   _checkNetwork() {
+    console.log(window.ethereum.networkVersion);
     if (window.ethereum.networkVersion === NETWORK_ID) {
       return true;
     }
-
+    
     this.setState({
       networkError: "Please connect your wallet to NETWORK ID: " + NETWORK_ID,
     });
@@ -42,6 +44,7 @@ export class App extends React.Component {
   // This method resets the state
   _resetState() {
     this.setState(this.initialState);
+    localStorage.setItem('isWalletConnected', false);
   }
 
   // This method just clears part of the state.
@@ -51,13 +54,15 @@ export class App extends React.Component {
 
   async _connectWallet() {
     const { ethereum } = window;
-
+    const walletConnected = localStorage.getItem('isWalletConnected');
     if (!ethereum) {
       alert("No wallet found");
     } else {
       try {
-        if (!this._checkNetwork()) {
-          return;
+        if(!walletConnected){
+          if (!this._checkNetwork()) {
+            return;
+          }
         }
         const [selectedAddress] = await ethereum.request({
           method: "eth_requestAccounts",
@@ -87,6 +92,16 @@ export class App extends React.Component {
     }
   }
 
+componentDidMount(){
+  if (localStorage.getItem('isWalletConnected') === 'true') {
+    try {
+      this._connectWallet();
+      localStorage.setItem('isWalletConnected', true);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+}
   render() {
     // Ethereum wallets inject the window.ethereum object. If it hasn't been
     // injected, we instruct the user to install MetaMask.
