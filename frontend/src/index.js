@@ -1,18 +1,18 @@
 import React from "react";
-//import "bootstrap/dist/css/bootstrap.min.css"; //REMOVE THIS
+import { createRoot } from "react-dom/client";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+
+import AuthLayout from "./layouts/Auth.js";
+import AdminLayout from "./layouts/Admin.js";
+//import App from "./components/App";
+//import { CreatorForm } from "./components/CreatorForm";
+
+//css and other stylesheets
+import "./assets/styles/index.css";
 import "./assets/css/argon-dashboard-react.css";
 import "./assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { createRoot } from "react-dom/client";
-import "./assets/styles/index.css";
-//import App from "./components/App";
-import reportWebVitals from "./reportWebVitals";
-
-//import { CreatorForm } from "./components/CreatorForm";
-
-import AuthLayout from "./layouts/Auth.js";
-
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -20,7 +20,8 @@ root.render(
   <BrowserRouter>
     <Switch>
       <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
-      <Redirect from="/" to="/auth" />
+      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+      <Redirect from="/" to="/admin" />
     </Switch>
   </BrowserRouter>
 );
