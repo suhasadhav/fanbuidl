@@ -5,8 +5,8 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AuthLayout from "./layouts/Auth.js";
 import AdminLayout from "./layouts/Admin.js";
-//import App from "./components/App";
-//import { CreatorForm } from "./components/CreatorForm";
+//import App from "./components/Dapp/App";
+//import { CreatorForm } from "./components/Dapp/CreatorForm";
 
 //css and other stylesheets
 import "./assets/styles/index.css";
@@ -21,7 +21,7 @@ root.render(
     <Switch>
       <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect from="/" to="/admin" />
+      <Redirect from="/" to="/auth" />
     </Switch>
   </BrowserRouter>
 );

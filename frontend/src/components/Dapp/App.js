@@ -1,5 +1,5 @@
 import React from "react";
-import "../assets/styles/App.css";
+import "../../assets/styles/App.css";
 import { Row, Col } from "react-bootstrap";
 import { ConnectWallet } from "./ConnectWallet";
 import { Navigation } from "./Navigation";
@@ -122,12 +122,14 @@ export class App extends React.Component {
 
     // If everything is loaded, we render the application.
     return (
-      <div className="container">
-        <Navigation address={this.state.selectedAddress}></Navigation>
-        <Row className="mx-0">
-          <Col xs={5}></Col>
-        </Row>
-      </div>
+      <>
+        <div className="container">
+          <Navigation address={this.state.selectedAddress}></Navigation>
+          <Row className="mx-0">
+            <Col xs={5}></Col>
+          </Row>
+        </div>
+      </>
     );
   }
 }

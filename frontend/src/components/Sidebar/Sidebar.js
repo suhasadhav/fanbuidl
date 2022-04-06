@@ -149,10 +149,7 @@ const Sidebar = (props) => {
                 <span className="avatar avatar-sm rounded-circle">
                   <img
                     alt="..."
-                    src={
-                      require("../../assets/img/theme/team-1-800x800.jpg")
-                        .default
-                    }
+                    src={require("../../assets/img/wallet.png").default}
                   />
                 </span>
               </Media>
