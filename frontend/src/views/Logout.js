@@ -15,31 +15,25 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Login from "./views/Login.js";
-import Logout from "./views/Logout.js";
-import Index from "./views/Dashboard";
 
-var routes = [
-  {
-    path: "/index",
-    name: "Dashboard",
-    icon: "ni ni-tv-2 text-primary",
-    component: Index,
-    layout: "/admin",
-  },
-  {
-    path: "/login",
-    name: "Login",
-    icon: "ni ni-key-25 text-info",
-    component: Login,
-    layout: "/auth",
-  },
-  {
-    path: "/logout",
-    name: "Logout",
-    icon: "ni ni-key-25 text-info",
-    component: Logout,
-    layout: "/auth",
-  },
-];
-export default routes;
+import React from "react";
+import { Redirect } from "react-router-dom";
+
+export class Logout extends React.Component {
+  initialState = {
+    selectedAddress: undefined,
+    networkError: undefined,
+  };
+  constructor(props) {
+    super(props);
+  }
+  componentDidMount() {
+    this.state = this.initialState;
+    localStorage.setItem("isWalletConnected", false);
+  }
+  render() {
+    return <Redirect to="/auth" />;
+  }
+}
+
+export default Logout;

@@ -73,7 +73,7 @@ const AdminNavbar = (props) => {
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      0x...8985
+                      {props.selectedAddress}
                     </span>
                   </Media>
                 </Media>
@@ -99,7 +99,7 @@ const AdminNavbar = (props) => {
                   <span>Support</span>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem onClick={() => logout()}>
+                <DropdownItem to="/auth/logout" tag={Link}>
                   <i className="ni ni-user-run" />
                   <span>Logout</span>
                 </DropdownItem>
