@@ -20,7 +20,6 @@
 import { Button, Card, CardBody } from "reactstrap";
 
 import { NETWORK_ID } from "../components/constants";
-
 import React from "react";
 import { Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
@@ -149,8 +148,16 @@ export class Login extends React.Component {
       );
     }
 
+    //localStorage.setItem("selectedAddress", this.state.selectedAddress);
     // If everything is loaded, we render the application.
-    return <Redirect to="/admin" />;
+    return (
+      <Redirect
+        to={{
+          pathname: "/admin/index",
+          state: { selectedAddress: this.state.selectedAddress },
+        }}
+      />
+    );
   }
 }
 

@@ -23,13 +23,12 @@ import { Container } from "reactstrap";
 import AdminNavbar from "../components/Navbars/AdminNavbar.js";
 import AdminFooter from "../components/Footers/AdminFooter.js";
 import Sidebar from "../components/Sidebar/Sidebar.js";
-
 import routes from "../routes.js";
 
 const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
-
+  const [selectedAddress, setSelectedAddress] = useState();
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -37,7 +36,6 @@ const Admin = (props) => {
   }, [location]);
 
   const getRoutes = (routes) => {
-    console.log(props);
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
@@ -80,7 +78,10 @@ const Admin = (props) => {
         <AdminNavbar
           {...props}
           brandText={getBrandText(props.location.pathname)}
-          selectedAddress="0xx"
+          selectedAddress={
+            setSelectedAddress(props.location.state.selectedAddress) &&
+            selectedAddress
+          }
         />
         <Switch>
           {getRoutes(routes)}

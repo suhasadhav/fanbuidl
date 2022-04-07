@@ -16,8 +16,7 @@
 
 */
 // javascipt plugin for creating charts
-import Chart from "chart.js";
-// react plugin used to create charts
+import React from "react";
 // reactstrap components
 import {
   Button,
@@ -30,114 +29,130 @@ import {
   Col,
 } from "reactstrap";
 
-// core components
-import { chartOptions, parseOptions } from "../variables/charts.js";
-
+import { NETWORK_ID } from "../components/constants";
 import Header from "../components/Headers/Header.js";
 
-const Index = (props) => {
-  if (window.Chart) {
-    parseOptions(Chart, chartOptions());
-  }
-  return (
-    <>
-      <Header />
-      {/* Page content */}
-      <Container className="mt--7" fluid>
-        <Row className="mt-5">
-          <Col className="mb-5 mb-xl-0" xl="8">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">Your Content</h3>
-                  </div>
-                  <div className="col text-right">
-                    <Button
-                      color="primary"
-                      href="#"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      See all
-                    </Button>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Creator</th>
-                    <th scope="col">Visitors</th>
-                    <th scope="col">Posted On</th>
-                    <th scope="col">Last 24h</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">/argon/</th>
-                    <td>4,569</td>
-                    <td>340</td>
-                    <td>
-                      <i className="fas fa-arrow-up text-success mr-3" /> 46,53%
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card>
-          </Col>
-          <Col xl="4">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">Top Creators</h3>
-                  </div>
-                  <div className="col text-right">
-                    <Button
-                      color="primary"
-                      href="#"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      See all
-                    </Button>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Referral</th>
-                    <th scope="col">Visitors</th>
-                    <th scope="col" />
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">Facebook</th>
-                    <td>1,480</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">60%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="60"
-                            barClassName="bg-gradient-danger"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-    </>
-  );
-};
+export class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default Index;
+    this.initialState = {
+      selectedAddress: undefined,
+      networkError: undefined,
+    };
+
+    this.state = this.initialState;
+  }
+
+  render() {
+    if (window.ethereum === undefined) {
+      console.log("No wallet detected!");
+      //return <NoWalletDetected />;
+    }
+
+    // If everything is loaded, we render the application.
+    return (
+      <>
+        <Header />
+        {/* Page content */}
+        <Container className="mt--7" fluid>
+          <Row className="mt-5">
+            <Col className="mb-5 mb-xl-0" xl="8">
+              <Card className="shadow">
+                <CardHeader className="border-0">
+                  <Row className="align-items-center">
+                    <div className="col">
+                      <h3 className="mb-0">Your Content</h3>
+                    </div>
+                    <div className="col text-right">
+                      <Button
+                        color="primary"
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        size="sm"
+                      >
+                        See all
+                      </Button>
+                    </div>
+                  </Row>
+                </CardHeader>
+                <Table className="align-items-center table-flush" responsive>
+                  <thead className="thead-light">
+                    <tr>
+                      <th scope="col">Creator</th>
+                      <th scope="col">Visitors</th>
+                      <th scope="col">Posted On</th>
+                      <th scope="col">Last 24h</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">/argon/</th>
+                      <td>4,569</td>
+                      <td>340</td>
+                      <td>
+                        <i className="fas fa-arrow-up text-success mr-3" />{" "}
+                        46,53%
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Card>
+            </Col>
+            <Col xl="4">
+              <Card className="shadow">
+                <CardHeader className="border-0">
+                  <Row className="align-items-center">
+                    <div className="col">
+                      <h3 className="mb-0">Top Creators</h3>
+                    </div>
+                    <div className="col text-right">
+                      <Button
+                        color="primary"
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        size="sm"
+                      >
+                        See all
+                      </Button>
+                    </div>
+                  </Row>
+                </CardHeader>
+                <Table className="align-items-center table-flush" responsive>
+                  <thead className="thead-light">
+                    <tr>
+                      <th scope="col">Referral</th>
+                      <th scope="col">Visitors</th>
+                      <th scope="col" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Facebook</th>
+                      <td>1,480</td>
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <span className="mr-2">60%</span>
+                          <div>
+                            <Progress
+                              max="100"
+                              value="60"
+                              barClassName="bg-gradient-danger"
+                            />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </>
+    );
+    //return <Redirect to="/admin" />;
+  }
+}
+
+export default Dashboard;

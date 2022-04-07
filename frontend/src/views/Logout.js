@@ -24,15 +24,12 @@ export class Logout extends React.Component {
     selectedAddress: undefined,
     networkError: undefined,
   };
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
-    this.state = this.initialState;
+    this.setState(this.initialState);
     localStorage.setItem("isWalletConnected", false);
   }
   render() {
-    return <Redirect to="/auth" />;
+    return <Redirect to="/auth/login" />;
   }
 }
 

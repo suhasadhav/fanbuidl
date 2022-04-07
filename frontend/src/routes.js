@@ -17,14 +17,14 @@
 */
 import Login from "./views/Login.js";
 import Logout from "./views/Logout.js";
-import Index from "./views/Dashboard";
+import Dashboard from "./views/Dashboard";
 
 var routes = [
   {
     path: "/index",
     name: "Dashboard",
     icon: "ni ni-tv-2 text-primary",
-    component: Index,
+    component: Dashboard,
     layout: "/admin",
   },
   {
