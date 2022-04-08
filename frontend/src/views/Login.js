@@ -19,11 +19,13 @@
 // reactstrap components
 import { Button, Card, CardBody } from "reactstrap";
 
-import { NETWORK_ID } from "../components/constants";
+import { NETWORK_ID, NETWORK_NAME } from "../components/constants";
 import React from "react";
 import { Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 //import { useState, setState } from "react";
+
+import { NoWalletDetected } from "../components/Dapp/NoWalletDetected";
 
 export class Login extends React.Component {
   constructor(props) {
@@ -36,6 +38,7 @@ export class Login extends React.Component {
 
     this.state = this.initialState;
   }
+
   // This method initializes the dapp
   _initialize(userAddress) {
     this.setState({
@@ -49,7 +52,7 @@ export class Login extends React.Component {
     if (window.ethereum.networkVersion === NETWORK_ID) {
       return true;
     }
-
+    alert("Select " + NETWORK_NAME + " network");
     this.setState({
       networkError: "Please connect your wallet to NETWORK ID: " + NETWORK_ID,
     });
@@ -75,7 +78,7 @@ export class Login extends React.Component {
       alert("No wallet found");
     } else {
       try {
-        if (!walletConnected) {
+        if (walletConnected === null || walletConnected === false) {
           if (!this._checkNetwork()) {
             return;
           }
@@ -119,7 +122,11 @@ export class Login extends React.Component {
     // injected, we instruct the user to install MetaMask.
     if (window.ethereum === undefined) {
       console.log("No wallet detected!");
-      //return <NoWalletDetected />;
+      return (
+        <>
+          <NoWalletDetected />
+        </>
+      );
     }
 
     if (!this.state.selectedAddress) {

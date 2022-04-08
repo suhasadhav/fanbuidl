@@ -41,7 +41,8 @@ export class AdminNavbar extends React.Component {
     super(props);
   }
   render() {
-    if (localStorage.getItem("isWalletConnected") === "false") {
+    const walletConnected = localStorage.getItem("isWalletConnected");
+    if (walletConnected === null || walletConnected === false) {
       return <Redirect to="/auth/login" />;
     }
     return (

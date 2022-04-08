@@ -25,7 +25,7 @@ import AdminFooter from "../components/Footers/AdminFooter.js";
 import Sidebar from "../components/Sidebar/Sidebar.js";
 import routes from "../routes.js";
 
-import { NETWORK_ID } from "../components/constants";
+import { NETWORK_ID, NETWORK_NAME } from "../components/constants";
 const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
@@ -37,13 +37,13 @@ const Admin = (props) => {
 
   const _initialize = (userAddress) => {
     setSelectedAddress(userAddress);
-    //localStorage.setItem("isWalletConnected", true);
+    localStorage.setItem("isWalletConnected", true);
   };
 
   const _resetState = () => {
+    localStorage.setItem("isWalletConnected", false);
     setSelectedAddress(undefined);
     setLoggedIn(false);
-    localStorage.setItem("isWalletConnected", false);
   };
 
   const _checkNetwork = () => {
@@ -99,6 +99,7 @@ const Admin = (props) => {
 
     ethereum.on("chainChanged", ([networkId]) => {
       _resetState();
+      //window.location.reload();
     });
     setLoggedIn(true);
   }
