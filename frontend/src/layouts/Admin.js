@@ -25,17 +25,19 @@ import AdminFooter from "../components/Footers/AdminFooter.js";
 import Sidebar from "../components/Sidebar/Sidebar.js";
 import routes from "../routes.js";
 
+import { NETWORK_ID } from "../components/constants";
 const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
   const [selectedAddress, setSelectedAddress] = useState();
   const [loggedIn, setLoggedIn] = useState();
+  const [networkError, setNetowrkError] = useState();
 
   const { ethereum } = window;
 
   const _initialize = (userAddress) => {
     setSelectedAddress(userAddress);
-    localStorage.setItem("isWalletConnected", true);
+    //localStorage.setItem("isWalletConnected", true);
   };
 
   const _resetState = () => {
@@ -44,16 +46,13 @@ const Admin = (props) => {
     localStorage.setItem("isWalletConnected", false);
   };
 
-  window.ethereum.on("accountsChanged", ([newAddress]) => {
-    if (newAddress === undefined) {
-      return _resetState();
+  const _checkNetwork = () => {
+    if (window.ethereum.networkVersion === NETWORK_ID) {
+      return true;
     }
-    _initialize(newAddress);
-  });
-
-  window.ethereum.on("chainChanged", ([networkId]) => {
-    _resetState();
-  });
+    setNetowrkError("Please connect your wallet to NETWORK ID: " + NETWORK_ID);
+    return false;
+  };
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -91,6 +90,16 @@ const Admin = (props) => {
 
   if (props.location.state !== undefined && loggedIn !== true) {
     setSelectedAddress(props.location.state.selectedAddress);
+    ethereum.on("accountsChanged", ([newAddress]) => {
+      if (newAddress === undefined) {
+        return _resetState();
+      }
+      _initialize(newAddress);
+    });
+
+    ethereum.on("chainChanged", ([networkId]) => {
+      _resetState();
+    });
     setLoggedIn(true);
   }
 
