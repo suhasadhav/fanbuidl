@@ -20,8 +20,11 @@ root.render(
   <BrowserRouter>
     <Switch>
       <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect from="/" to="/auth" />
+      <Route
+        path="/admin/index"
+        render={(props) => <AdminLayout {...props} />}
+      />
+      <Redirect from="*" to="/auth/login" />
     </Switch>
   </BrowserRouter>
 );

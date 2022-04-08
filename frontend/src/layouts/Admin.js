@@ -29,6 +29,32 @@ const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
   const [selectedAddress, setSelectedAddress] = useState();
+  const [loggedIn, setLoggedIn] = useState();
+
+  const { ethereum } = window;
+
+  const _initialize = (userAddress) => {
+    setSelectedAddress(userAddress);
+    localStorage.setItem("isWalletConnected", true);
+  };
+
+  const _resetState = () => {
+    setSelectedAddress(undefined);
+    setLoggedIn(false);
+    localStorage.setItem("isWalletConnected", false);
+  };
+
+  window.ethereum.on("accountsChanged", ([newAddress]) => {
+    if (newAddress === undefined) {
+      return _resetState();
+    }
+    _initialize(newAddress);
+  });
+
+  window.ethereum.on("chainChanged", ([networkId]) => {
+    _resetState();
+  });
+
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -63,6 +89,11 @@ const Admin = (props) => {
     return "Brand";
   };
 
+  if (props.location.state !== undefined && loggedIn !== true) {
+    setSelectedAddress(props.location.state.selectedAddress);
+    setLoggedIn(true);
+  }
+
   return (
     <>
       <Sidebar
@@ -78,10 +109,7 @@ const Admin = (props) => {
         <AdminNavbar
           {...props}
           brandText={getBrandText(props.location.pathname)}
-          selectedAddress={
-            setSelectedAddress(props.location.state.selectedAddress) &&
-            selectedAddress
-          }
+          selectedAddress={selectedAddress}
         />
         <Switch>
           {getRoutes(routes)}

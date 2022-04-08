@@ -23,6 +23,7 @@ export class Logout extends React.Component {
   initialState = {
     selectedAddress: undefined,
     networkError: undefined,
+    loggedIn: false,
   };
   componentDidMount() {
     this.setState(this.initialState);
