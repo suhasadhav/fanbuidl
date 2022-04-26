@@ -123,6 +123,10 @@ const Admin = (props) => {
   }
   main();
 
+  if (!isMetaMaskConnected()) {
+    console.log(isMetaMaskConnected());
+  }
+
   return (
     <>
       <Sidebar
