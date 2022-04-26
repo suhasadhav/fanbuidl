@@ -18,7 +18,7 @@
 import React, { useState } from "react";
 import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 // reactstrap components
-import { Container } from "reactstrap";
+import { Container, Button } from "reactstrap";
 // core components
 import AdminNavbar from "../components/Navbars/AdminNavbar.js";
 import AdminFooter from "../components/Footers/AdminFooter.js";
@@ -28,37 +28,8 @@ import routes from "../routes.js";
 import { NETWORK_ID, NETWORK_NAME } from "../components/constants";
 const Admin = (props) => {
   const mainContent = React.useRef(null);
-  const location = useLocation();
   const [selectedAddress, setSelectedAddress] = useState();
-  const [loggedIn, setLoggedIn] = useState();
-  const [networkError, setNetowrkError] = useState();
-
   const { ethereum } = window;
-
-  const _initialize = (userAddress) => {
-    setSelectedAddress(userAddress);
-    localStorage.setItem("isWalletConnected", true);
-  };
-
-  const _resetState = () => {
-    localStorage.setItem("isWalletConnected", false);
-    setSelectedAddress(undefined);
-    setLoggedIn(false);
-  };
-
-  const _checkNetwork = () => {
-    if (window.ethereum.networkVersion === NETWORK_ID) {
-      return true;
-    }
-    setNetowrkError("Please connect your wallet to NETWORK ID: " + NETWORK_ID);
-    return false;
-  };
-
-  React.useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    mainContent.current.scrollTop = 0;
-  }, [location]);
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
@@ -88,21 +59,69 @@ const Admin = (props) => {
     return "Brand";
   };
 
-  if (props.location.state !== undefined && loggedIn !== true) {
-    setSelectedAddress(props.location.state.selectedAddress);
-    ethereum.on("accountsChanged", ([newAddress]) => {
-      if (newAddress === undefined) {
-        return _resetState();
-      }
-      _initialize(newAddress);
-    });
+  let accounts;
+  const isMetaMaskConnected = () => accounts && accounts.length > 0;
 
-    ethereum.on("chainChanged", ([networkId]) => {
-      _resetState();
-      //window.location.reload();
-    });
-    setLoggedIn(true);
+  //Created check function to see if the MetaMask extension is installed
+  const isMetaMaskInstalled = () => {
+    return Boolean(ethereum && ethereum.isMetaMask);
+  };
+
+  function handleNewAccounts(newAccounts) {
+    accounts = newAccounts;
+    if (isMetaMaskConnected()) {
+      console.log("MM connected");
+      console.log(accounts);
+    }
   }
+
+  const onClickConnect = async () => {
+    try {
+      const newAccounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      handleNewAccounts(newAccounts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  async function getNetworkAndChainId() {
+    try {
+      const chainId = await ethereum.request({
+        method: "eth_chainId",
+      });
+      handleNewChain(chainId);
+
+      const networkId = await ethereum.request({
+        method: "net_version",
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  function handleNewChain(chainId) {
+    console.log("New Chain: " + chainId);
+  }
+
+  async function main() {
+    if (isMetaMaskInstalled()) {
+      ethereum.autoRefreshOnNetworkChange = false;
+      getNetworkAndChainId();
+      ethereum.on("chainChanged", handleNewChain);
+      ethereum.on("accountsChanged", handleNewAccounts);
+
+      try {
+        const newAccounts = await ethereum.request({
+          method: "eth_accounts",
+        });
+        handleNewAccounts(newAccounts);
+      } catch (err) {
+        console.error("Error on init when getting accounts", err);
+      }
+    }
+  }
+  main();
 
   return (
     <>

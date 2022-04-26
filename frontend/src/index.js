@@ -3,10 +3,7 @@ import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import AuthLayout from "./layouts/Auth.js";
 import AdminLayout from "./layouts/Admin.js";
-//import App from "./components/Dapp/App";
-//import { CreatorForm } from "./components/Dapp/CreatorForm";
 
 //css and other stylesheets
 import "./assets/styles/index.css";
@@ -19,12 +16,11 @@ const root = createRoot(container);
 root.render(
   <BrowserRouter>
     <Switch>
-      <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
       <Route
         path="/admin/index"
         render={(props) => <AdminLayout {...props} />}
       />
-      <Redirect from="*" to="/auth/login" />
+      <Redirect from="*" to="/admin/index" />
     </Switch>
   </BrowserRouter>
 );

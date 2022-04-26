@@ -30,7 +30,7 @@ export class Logout extends React.Component {
     localStorage.setItem("isWalletConnected", false);
   }
   render() {
-    return <Redirect to="/auth/login" />;
+    return <Redirect to="/admin/index" />;
   }
 }
 

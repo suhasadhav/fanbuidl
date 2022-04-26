@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -41,10 +41,6 @@ export class AdminNavbar extends React.Component {
     super(props);
   }
   render() {
-    const walletConnected = localStorage.getItem("isWalletConnected");
-    if (walletConnected === null || walletConnected === false) {
-      return <Redirect to="/auth/login" />;
-    }
     return (
       <>
         <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
