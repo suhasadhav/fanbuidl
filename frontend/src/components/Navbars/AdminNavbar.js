@@ -34,6 +34,7 @@ import {
   Nav,
   Container,
   Media,
+  Button,
 } from "reactstrap";
 
 export class AdminNavbar extends React.Component {
@@ -41,6 +42,12 @@ export class AdminNavbar extends React.Component {
     super(props);
   }
   render() {
+    const isConnected = this.props.isConnected;
+    if (isConnected) {
+      console.log("CONNECTED");
+    } else {
+      console.log("NOT CONNECTED");
+    }
     return (
       <>
         <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -63,6 +70,16 @@ export class AdminNavbar extends React.Component {
                 </InputGroup>
               </FormGroup>
             </Form>
+
+            {!this.props.isConnected && (
+              <Button
+                color="primary"
+                onClick={() => this.props.onClickConnect()}
+                size="lg"
+              >
+                Connect Wallet
+              </Button>
+            )}
             <Nav className="align-items-center d-none d-md-flex" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>

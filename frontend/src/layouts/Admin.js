@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 // reactstrap components
 import { Container, Button } from "reactstrap";
@@ -29,6 +29,7 @@ import { NETWORK_ID, NETWORK_NAME } from "../components/constants";
 const Admin = (props) => {
   const mainContent = React.useRef(null);
   const [selectedAddress, setSelectedAddress] = useState();
+  const [loggedIn, setLoggedIn] = useState(false);
   const { ethereum } = window;
 
   const getRoutes = (routes) => {
@@ -72,6 +73,9 @@ const Admin = (props) => {
     if (isMetaMaskConnected()) {
       console.log("MM connected");
       console.log(accounts);
+      setLoggedIn(true);
+    } else {
+      loggedIn && setLoggedIn(false);
     }
   }
 
@@ -82,6 +86,7 @@ const Admin = (props) => {
       });
       handleNewAccounts(newAccounts);
     } catch (error) {
+      loggedIn && setLoggedIn(false);
       console.error(error);
     }
   };
@@ -100,32 +105,26 @@ const Admin = (props) => {
       console.error(err);
     }
   }
-  function handleNewChain(chainId) {
-    console.log("New Chain: " + chainId);
-  }
+  function handleNewChain(chainId) {}
 
-  async function main() {
-    if (isMetaMaskInstalled()) {
-      ethereum.autoRefreshOnNetworkChange = false;
-      getNetworkAndChainId();
-      ethereum.on("chainChanged", handleNewChain);
-      ethereum.on("accountsChanged", handleNewAccounts);
-
-      try {
-        const newAccounts = await ethereum.request({
-          method: "eth_accounts",
-        });
-        handleNewAccounts(newAccounts);
-      } catch (err) {
-        console.error("Error on init when getting accounts", err);
+  useEffect(() => {
+    (async () => {
+      if (isMetaMaskInstalled()) {
+        ethereum.autoRefreshOnNetworkChange = true;
+        getNetworkAndChainId();
+        ethereum.on("chainChanged", handleNewChain);
+        ethereum.on("accountsChanged", handleNewAccounts);
+        try {
+          const newAccounts = await ethereum.request({
+            method: "eth_accounts",
+          });
+          handleNewAccounts(newAccounts);
+        } catch (err) {
+          console.error("Error on init when getting accounts", err);
+        }
       }
-    }
-  }
-  main();
-
-  if (!isMetaMaskConnected()) {
-    console.log(isMetaMaskConnected());
-  }
+    })();
+  });
 
   return (
     <>
@@ -143,6 +142,8 @@ const Admin = (props) => {
           {...props}
           brandText={getBrandText(props.location.pathname)}
           selectedAddress={selectedAddress}
+          isConnected={isMetaMaskConnected() ? true : false}
+          onClickConnect={onClickConnect}
         />
         <Switch>
           {getRoutes(routes)}
