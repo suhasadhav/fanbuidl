@@ -9,6 +9,7 @@ contract Fanbuidl {
         TODO:   
             1. Optimize usage of data structures as lot of structs and dynamic arrays
                are being used
+            2. Include OZ contracts like ownable, SafeMath
 
     */
     // Contract owner address
