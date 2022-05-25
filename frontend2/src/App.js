@@ -3,29 +3,38 @@ import { useEffect, useState } from "react";
 //Custom Import
 import "./App.css";
 import WalletConnect from "./components/WalletConnect";
-
+import Dashboard from "./components/Dashboard";
 function App() {
   const [accounts, setAccounts] = useState([]);
   const { ethereum } = window;
 
   const isMetaMaskConnected = () => accounts && accounts.length > 0;
+  const isMetaMaskInstalled = () => Boolean(ethereum && ethereum.isMetaMask);
 
   const onClickConnect = async () => {
-    console.log("Called onclickconnect");
-    try {
-      const newAccounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      console.log(newAccounts);
-      handleNewAccounts(newAccounts);
-    } catch (error) {
-      console.error(error);
+    if (isMetaMaskInstalled()) {
+      console.log("Called onclickconnect");
+      try {
+        const newAccounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        console.log(newAccounts);
+        handleNewAccounts(newAccounts);
+      } catch (error) {
+        if (error.code === 4001) {
+          console.log("Please connect to MetaMask.");
+        } else {
+          console.error(error);
+        }
+      }
+    } else {
+      alert("Please install Metamask wallet");
     }
   };
 
   function handleNewAccounts(newAccounts) {
+    console.log("Handling new accounts: " + newAccounts);
     setAccounts(newAccounts);
-    console.log(accounts);
     if (isMetaMaskConnected()) {
       //initializeAccountButtons();
     }
@@ -78,10 +87,8 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        <h2>{accounts[0]}</h2>
-        {!isMetaMaskConnected() && <WalletConnect onClick={onClickConnect} />}
-      </header>
+      {!isMetaMaskConnected() && <WalletConnect onClick={onClickConnect} />}
+      {isMetaMaskConnected() && <Dashboard accounts={accounts} />}
     </div>
   );
 }

@@ -41,6 +41,3 @@
     transform: rotate(360deg);
   }
 }
-li:before {
-  content: "★";
-}
