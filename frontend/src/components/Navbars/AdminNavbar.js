@@ -34,7 +34,6 @@ import {
   Nav,
   Container,
   Media,
-  Button,
 } from "reactstrap";
 
 export class AdminNavbar extends React.Component {
@@ -42,12 +41,6 @@ export class AdminNavbar extends React.Component {
     super(props);
   }
   render() {
-    const isConnected = this.props.isConnected;
-    if (isConnected) {
-      console.log("CONNECTED");
-    } else {
-      console.log("NOT CONNECTED");
-    }
     return (
       <>
         <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -55,9 +48,7 @@ export class AdminNavbar extends React.Component {
             <Link
               className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
               to="/"
-            >
-              {this.props.brandText}
-            </Link>
+            ></Link>
             <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
               <FormGroup className="mb-0">
                 <InputGroup className="input-group-alternative">
@@ -71,30 +62,16 @@ export class AdminNavbar extends React.Component {
               </FormGroup>
             </Form>
 
-            {!this.props.isConnected && (
-              <Button
-                color="primary"
-                onClick={() => this.props.onClickConnect()}
-                size="lg"
-              >
-                Connect Wallet
-              </Button>
-            )}
             <Nav className="align-items-center d-none d-md-flex" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
-                    <span className="avatar avatar-sm rounded-circle">
-                      <img
-                        alt="..."
-                        src={require("../../assets/img/wallet.png")}
-                      />
+                    <span
+                      className="avatar rounded-circle"
+                      style={{ color: "Mediumslateblue" }}
+                    >
+                      <i className="fa-solid fa-wallet fa-xl"></i>
                     </span>
-                    <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold">
-                        {this.props.selectedAddress}
-                      </span>
-                    </Media>
                   </Media>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-menu-arrow" right>
@@ -108,14 +85,6 @@ export class AdminNavbar extends React.Component {
                   <DropdownItem to="/admin/user-profile" tag={Link}>
                     <i className="ni ni-settings-gear-65" />
                     <span>Settings</span>
-                  </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-calendar-grid-58" />
-                    <span>Activity</span>
-                  </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-support-16" />
-                    <span>Support</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem to="/auth/logout" tag={Link}>
