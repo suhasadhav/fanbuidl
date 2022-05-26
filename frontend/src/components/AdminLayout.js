@@ -51,7 +51,7 @@ const AdminLayout = (props) => {
         routes={routes}
         logo={{
           innerLink: "/admin/index",
-          //imgSrc: require("../assets/img/logo.png").default,
+          imgSrc: require("../assets/img/logo.png"),
           imgAlt: "...",
         }}
       />
