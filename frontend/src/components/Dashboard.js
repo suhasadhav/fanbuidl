@@ -29,28 +29,14 @@ import {
   Col,
 } from "reactstrap";
 
-import { NETWORK_ID } from "../components/constants";
-import Header from "../components/Headers/Header.js";
+import Header from "./Header.js";
 
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-
-    this.initialState = {
-      selectedAddress: undefined,
-      networkError: undefined,
-    };
-
-    this.state = this.initialState;
   }
 
   render() {
-    if (window.ethereum === undefined) {
-      console.log("No wallet detected!");
-      //return <NoWalletDetected />;
-    }
-
-    // If everything is loaded, we render the application.
     return (
       <>
         <Header />

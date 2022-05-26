@@ -3,12 +3,11 @@ import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import AdminLayout from "./layouts/Admin.js";
+import AdminLayout from "./components/AdminLayout";
 
 //css and other stylesheets
-import "./assets/styles/index.css";
 import "./assets/css/argon-dashboard-react.css";
-import "./assets/plugins/nucleo/css/nucleo.css";
+import "./assets/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const container = document.getElementById("root");

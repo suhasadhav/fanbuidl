@@ -16,7 +16,7 @@
 
 */
 //import Logout from "./views/Logout.js";
-import Dashboard from "./views/Dashboard";
+import Dashboard from "./components/Dashboard";
 
 var routes = [
   {

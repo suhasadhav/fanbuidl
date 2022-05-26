@@ -21,12 +21,12 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { Container } from "reactstrap";
 
 // Custom components
-import AdminNavbar from "../components/Navbars/AdminNavbar.js";
-import AdminFooter from "../components/Footers/AdminFooter.js";
-import Sidebar from "../components/Sidebar/Sidebar.js";
+import Navbar from "./Navbar.js";
+import Footer from "./Footer.js";
+import Sidebar from "./Sidebar.js";
 import routes from "../routes.js";
 
-const Admin = (props) => {
+const AdminLayout = (props) => {
   const mainContent = React.useRef(null);
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
@@ -51,22 +51,22 @@ const Admin = (props) => {
         routes={routes}
         logo={{
           innerLink: "/admin/index",
-          imgSrc: require("../assets/img/brand/argon-react.png").default,
+          //imgSrc: require("../assets/img/logo.png").default,
           imgAlt: "...",
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <AdminNavbar {...props} />
+        <Navbar {...props} />
         <Switch>
           {getRoutes(routes)}
           <Redirect from="*" to="/admin/index" />
         </Switch>
         <Container fluid>
-          <AdminFooter />
+          <Footer />
         </Container>
       </div>
     </>
   );
 };
 
-export default Admin;
+export default AdminLayout;
