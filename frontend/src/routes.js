@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Logout from "./views/Logout.js";
+//import Logout from "./views/Logout.js";
 import Dashboard from "./views/Dashboard";
 
 var routes = [
@@ -25,13 +25,6 @@ var routes = [
     icon: "ni ni-tv-2 text-primary",
     component: Dashboard,
     layout: "/admin",
-  },
-  {
-    path: "/logout",
-    name: "Logout",
-    icon: "ni ni-key-25 text-info",
-    component: Logout,
-    layout: "/auth",
   },
 ];
 export default routes;
