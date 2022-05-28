@@ -44,7 +44,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
-    console.log(web3);
+    web3.eth.getAccounts().then(console.log);
     return (
       <>
         <Header />
