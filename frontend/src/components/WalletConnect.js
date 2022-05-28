@@ -10,6 +10,8 @@ import {
   Col,
   Container,
 } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWallet, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 export class WalletConnect extends React.Component {
   constructor(props) {
@@ -62,33 +64,39 @@ export class WalletConnect extends React.Component {
                         onClick={this.props.onClick}
                       >
                         <span className="btn-inner--icon">
-                          <i className="ni ni-active40"></i>
+                          <FontAwesomeIcon icon={faWallet} size="lg" />
                         </span>
                         <span className="btn-inner--text">Metamask</span>
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardBody className="px-lg-5 ">
+                  <CardBody className="px-lg-0">
                     <ul className="text-muted text-left">
                       <p style={{ fontSize: "18px" }}>
-                        <i
-                          className="ni ni-check-bold"
-                          style={{ color: "green" }}
-                        ></i>{" "}
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          color="green"
+                          size="lg"
+                        />
+                        {"  "}
                         Read-only access to wallet
                       </p>
                       <p style={{ fontSize: "18px" }}>
-                        <i
-                          className="ni ni-check-bold"
-                          style={{ color: "green" }}
-                        ></i>{" "}
-                        No access to Private Keys
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          color="green"
+                          size="lg"
+                        />
+                        {"  "}
+                        No access to Private keys
                       </p>
                       <p style={{ fontSize: "18px" }}>
-                        <i
-                          className="ni ni-check-bold"
-                          style={{ color: "green" }}
-                        ></i>{" "}
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          color="green"
+                          size="lg"
+                        />
+                        {"  "}
                         No transaction without approval
                       </p>
                     </ul>
