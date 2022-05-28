@@ -114,7 +114,7 @@ export class Dashboard extends React.Component {
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row">Facebook</th>
+                      <th scope="row">{this.props.accounts}</th>
                       <td>1,480</td>
                       <td>
                         <div className="d-flex align-items-center">

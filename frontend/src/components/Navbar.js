@@ -40,6 +40,10 @@ export class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
   }
+  generateAccountStr() {
+    let x = String(this.props.accounts);
+    return x.substring(0, 4) + "..." + x.substring(x.length - 4, x);
+  }
   render() {
     return (
       <>
@@ -74,7 +78,7 @@ export class AdminNavbar extends React.Component {
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
-                        0x...678
+                        {this.generateAccountStr()}
                       </span>
                     </Media>
                   </Media>
