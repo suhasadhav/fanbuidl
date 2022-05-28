@@ -32,8 +32,11 @@ import {
 import Header from "./Header.js";
 
 // Contract Specific imports
+import Web3 from "web3";
 import contractAddress from "../contracts/contract-address.json";
 import FanbuidlArtifact from "../contracts/Fanbuidl.json";
+
+const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -41,6 +44,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
+    console.log(web3);
     return (
       <>
         <Header />

@@ -37,7 +37,7 @@ import {
 } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWallet, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faWallet } from "@fortawesome/free-solid-svg-icons";
 
 export class AdminNavbar extends React.Component {
   constructor(props) {

@@ -10,6 +10,9 @@ import "./assets/css/argon-dashboard-react.css";
 import "./assets/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+//Fix for web3 issue with create-react-app >v5
+import "./polyfill.js";
+
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
