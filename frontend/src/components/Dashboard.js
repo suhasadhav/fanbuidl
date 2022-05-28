@@ -43,8 +43,31 @@ export class Dashboard extends React.Component {
     super(props);
   }
 
+  getContractOwner() {
+    var contract = new web3.eth.Contract(
+      FanbuidlArtifact.abi,
+      contractAddress.Fanbuidl
+    );
+    console.log(this.props.accounts);
+    contract.methods.getOwner().call().then(console.log);
+    /*contract.methods
+      .getOwner()
+      .send({ from: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720" })
+      .on("receipt", function (receipt) {
+        console.log(" Receipt:" + receipt);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log("Confirmation");
+        console.log(
+          "confirmationNumber: " + confirmationNumber + " Receipt:" + receipt
+        );
+      })
+      .on("error", function (error, receipt) {
+        console.log("error Occurred: " + error + " Receipt:" + receipt);
+      });*/
+  }
+
   render() {
-    web3.eth.getAccounts().then(console.log);
     return (
       <>
         <Header />
@@ -62,10 +85,13 @@ export class Dashboard extends React.Component {
                       <Button
                         color="primary"
                         href="#"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={(e) => {
+                          //e.preventDefault();
+                          this.getContractOwner();
+                        }}
                         size="sm"
                       >
-                        See all
+                        Get Owner
                       </Button>
                     </div>
                   </Row>
