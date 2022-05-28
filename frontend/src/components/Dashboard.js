@@ -31,6 +31,10 @@ import {
 
 import Header from "./Header.js";
 
+// Contract Specific imports
+import contractAddress from "../contracts/contract-address.json";
+import FanbuidlArtifact from "../contracts/Fanbuidl.json";
+
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
