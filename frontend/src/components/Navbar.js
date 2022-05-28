@@ -36,6 +36,9 @@ import {
   Media,
 } from "reactstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWallet, faCheck } from "@fortawesome/free-solid-svg-icons";
+
 export class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
@@ -71,16 +74,16 @@ export class AdminNavbar extends React.Component {
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
                     <span
-                      className="avatar rounded-circle"
-                      style={{ color: "Mediumslateblue" }}
+                      className="button bg-info rounded p-2"
+                      style={{
+                        color: "white",
+                      }}
                     >
-                      <i className="fa-solid fa-wallet fa-xl"></i>
-                    </span>
-                    <Media className="ml-2 d-none d-lg-block">
+                      <FontAwesomeIcon icon={faWallet} size="xl" />{" "}
                       <span className="mb-0 text-sm font-weight-bold">
                         {this.generateAccountStr()}
                       </span>
-                    </Media>
+                    </span>
                   </Media>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-menu-arrow" right>
