@@ -71,7 +71,11 @@ export class Dashboard extends React.Component {
     //web3.eth.getAccounts().then(console.log);
     return (
       <>
-        <Header accounts={this.props.accounts} contract={this.contract} />
+        <Header
+          accounts={this.props.accounts}
+          contract={this.contract}
+          web3={web3}
+        />
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row className="mt-5">

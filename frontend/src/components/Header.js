@@ -18,12 +18,20 @@
 
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
-import Web3 from "web3";
 
-const Header = ({ accounts, contract }) => {
+const Header = ({ accounts, web3, contract }) => {
   function getActiveSubs() {
-    console.log(accounts);
-    contract.methods.getActiveSubscriptions(accounts).call().then(console.log);
+    try {
+      console.log(accounts);
+      web3.eth.getAccounts().then((res) => {
+        contract.methods
+          .getActiveSubscriptionCount(res)
+          .call()
+          .then(console.log);
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
   return (
     <>

@@ -337,7 +337,9 @@ contract Fanbuidl {
         }
         return activeSubs;
     }
-
+    function getActiveSubscriptionCount(address subscriber) public view returns(uint){
+        return(subList[subscriber].length);
+    }
     /*
         Name: getExpiredSubscriptions
             Get creator address array of subscriber for which subscription is expired
