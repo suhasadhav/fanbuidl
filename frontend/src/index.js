@@ -3,28 +3,26 @@ import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import AuthLayout from "./layouts/Auth.js";
-import AdminLayout from "./layouts/Admin.js";
-//import App from "./components/Dapp/App";
-//import { CreatorForm } from "./components/Dapp/CreatorForm";
+import AdminLayout from "./components/AdminLayout";
 
 //css and other stylesheets
-import "./assets/styles/index.css";
 import "./assets/css/argon-dashboard-react.css";
-import "./assets/plugins/nucleo/css/nucleo.css";
+import "./assets/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+
+//Fix for web3 issue with create-react-app >v5
+import "./polyfill.js";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
   <BrowserRouter>
     <Switch>
-      <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
       <Route
         path="/admin/index"
         render={(props) => <AdminLayout {...props} />}
       />
-      <Redirect from="*" to="/auth/login" />
+      <Redirect from="*" to="/admin/index" />
     </Switch>
   </BrowserRouter>
 );
