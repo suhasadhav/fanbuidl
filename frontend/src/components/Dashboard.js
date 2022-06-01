@@ -41,15 +41,14 @@ const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  getContractOwner() {
-    var contract = new web3.eth.Contract(
+    this.contract = new web3.eth.Contract(
       FanbuidlArtifact.abi,
       contractAddress.Fanbuidl
     );
-    console.log(this.props.accounts);
-    contract.methods.getOwner().call().then(console.log);
+  }
+
+  getContractOwner() {
+    this.contract.methods.getOwner().call().then(console.log);
     /*contract.methods
       .getOwner()
       .send({ from: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720" })
@@ -68,9 +67,11 @@ export class Dashboard extends React.Component {
   }
 
   render() {
+    //console.log("Get all acc");
+    //web3.eth.getAccounts().then(console.log);
     return (
       <>
-        <Header />
+        <Header accounts={this.props.accounts} contract={this.contract} />
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row className="mt-5">

@@ -18,8 +18,13 @@
 
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import Web3 from "web3";
 
-const Header = () => {
+const Header = ({ accounts, contract }) => {
+  function getActiveSubs() {
+    console.log(accounts);
+    contract.methods.getActiveSubscriptions(accounts).call().then(console.log);
+  }
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -36,7 +41,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Traffic
+                          Active Subscriptions {getActiveSubs()}
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
                           350,897
@@ -66,7 +71,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          New users
+                          Expiring Soon
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">2,356</span>
                       </div>
@@ -94,7 +99,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Sales
+                          Followers
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">924</span>
                       </div>
@@ -122,7 +127,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Performance
+                          Creators on Chain
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">49,65%</span>
                       </div>
