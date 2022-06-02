@@ -337,9 +337,24 @@ contract Fanbuidl {
         }
         return activeSubs;
     }
+    
+    // Get Subscription count for any particular user
     function getActiveSubscriptionCount(address subscriber) public view returns(uint){
         return(subList[subscriber].length);
     }
+
+    // Get expiring subscriptions within 7 days
+    function getExpiringSubscriptionCount(address subscriber) public view returns(uint){
+        uint256[] storage x = subList[subscriber];
+        uint256 j = 0;
+        for (uint256 i = 0; i < x.length; i++) {
+            if ((subscriptions[x[i]].endDate >= block.timestamp) && (subscriptions[x[i]].endDate <= block.timestamp + 7 days) ) {
+                j += 1;
+            }
+        }
+        return j;
+    }
+
     /*
         Name: getExpiredSubscriptions
             Get creator address array of subscriber for which subscription is expired
