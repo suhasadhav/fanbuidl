@@ -30,14 +30,11 @@ import {
 } from "reactstrap";
 
 import Header from "./Header.js";
-
-// Contract Specific imports
 import contractAddress from "../contracts/contract-address.json";
 import FanbuidlArtifact from "../contracts/Fanbuidl.json";
 
 import { ethers } from "ethers";
-
-export class Dashboard extends React.Component {
+export class CreatorForm extends React.Component {
   constructor(props) {
     super(props);
     this._initializeEthers();
@@ -55,8 +52,8 @@ export class Dashboard extends React.Component {
   async getContractOwner() {
     this._contract.getOwner().then(console.log);
   }
-  componentDidMount() {}
   render() {
+    console.log("CreatorForm");
     return (
       <>
         <Header accounts={this.props.accounts} contract={this._contract} />
@@ -74,10 +71,7 @@ export class Dashboard extends React.Component {
                       <Button
                         color="primary"
                         href="#"
-                        onClick={(e) => {
-                          //e.preventDefault();
-                          this.getContractOwner();
-                        }}
+                        onClick={(e) => {}}
                         size="sm"
                       >
                         Get Owner
@@ -163,4 +157,4 @@ export class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard;
+export default CreatorForm;

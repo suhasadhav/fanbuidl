@@ -16,6 +16,7 @@
 
 */
 //import Logout from "./views/Logout.js";
+import CreatorForm from "./components/CreatorForm";
 import Dashboard from "./components/Dashboard";
 
 var routes = [
@@ -24,6 +25,13 @@ var routes = [
     name: "Dashboard",
     icon: "ni ni-tv-2 text-primary",
     component: Dashboard,
+    layout: "/admin",
+  },
+  {
+    path: "/create-creator",
+    name: "Creator Account",
+    icon: "ni ni-single-02 text-yellow",
+    component: CreatorForm,
     layout: "/admin",
   },
 ];

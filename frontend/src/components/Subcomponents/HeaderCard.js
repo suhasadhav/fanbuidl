@@ -9,7 +9,7 @@ export const HeaderCard = ({
   accounts,
   method,
 }) => {
-  const [count, setCount] = useState(1000);
+  const [count, setCount] = useState(0);
   // TODO: Loading for each component
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +26,7 @@ export const HeaderCard = ({
       });
     } catch (e) {
       setCount(0);
-      console.error(e);
+      console.error("HeaderCard: " + e);
     } finally {
       setIsLoading(false);
     }
@@ -43,32 +43,33 @@ export const HeaderCard = ({
             {isLoading && <LoadingSpinner />}
 
             {!isLoading && (
-              <Row>
-                <div className="col">
-                  <CardTitle
-                    tag="h5"
-                    className="text-uppercase text-muted mb-0"
-                  >
-                    {title}
-                  </CardTitle>
-                  <span className="h2 font-weight-bold mb-0">{count}</span>
-                </div>
-                <Col className="col-auto">
-                  <div
-                    className={`icon icon-shape ${iconBackground} text-white rounded-circle shadow`}
-                  >
-                    <i className={`fas ${icon}`} />
+              <>
+                <Row>
+                  <div className="col">
+                    <CardTitle
+                      tag="h5"
+                      className="text-uppercase text-muted mb-0"
+                    >
+                      {title}
+                    </CardTitle>
+                    <span className="h2 font-weight-bold mb-0">{count}</span>
                   </div>
-                </Col>
-              </Row>
+                  <Col className="col-auto">
+                    <div
+                      className={`icon icon-shape ${iconBackground} text-white rounded-circle shadow`}
+                    >
+                      <i className={`fas ${icon}`} />
+                    </div>
+                  </Col>
+                </Row>
+                <p className="mt-3 mb-0 text-muted text-sm">
+                  <span className="text-success mr-2">
+                    <i className="fa fa-arrow-up" /> 3.48%
+                  </span>{" "}
+                  <span className="text-nowrap">Since last month</span>
+                </p>
+              </>
             )}
-
-            <p className="mt-3 mb-0 text-muted text-sm">
-              <span className="text-success mr-2">
-                <i className="fa fa-arrow-up" /> 3.48%
-              </span>{" "}
-              <span className="text-nowrap">Since last month</span>
-            </p>
           </CardBody>
         </Card>
       </Col>

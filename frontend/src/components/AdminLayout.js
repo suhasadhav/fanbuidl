@@ -16,7 +16,7 @@
 
 */
 import React, { useEffect, useState } from "react";
-//import { Route, Switch, Redirect } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
 import { Route } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
@@ -28,7 +28,7 @@ import Sidebar from "./Sidebar.js";
 import routes from "../routes.js";
 
 import WalletConnect from "./WalletConnect.js";
-import Dashboard from "./Dashboard.js";
+//import Dashboard from "./Dashboard.js";
 
 const AdminLayout = (props) => {
   const [accounts, setAccounts] = useState([]);
@@ -44,8 +44,8 @@ const AdminLayout = (props) => {
         return (
           <Route
             path={prop.layout + prop.path}
-            component={prop.component}
             key={key}
+            render={() => React.createElement(prop.component, { accounts })}
           />
         );
       } else {
@@ -132,13 +132,13 @@ const AdminLayout = (props) => {
           />
           <div className="main-content" ref={mainContent}>
             <Navbar accounts={accounts} {...props} />
-            <Dashboard accounts={accounts} />
-            {/*
+            {/*<Dashboard accounts={accounts} />*/}
+
             <Switch>
               {getRoutes(routes)}
               <Redirect from="*" to="/admin/index" />
             </Switch>
-          */}
+
             <Container fluid>
               <Footer />
             </Container>

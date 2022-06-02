@@ -18,11 +18,8 @@ const root = createRoot(container);
 root.render(
   <BrowserRouter>
     <Switch>
-      <Route
-        path="/admin/index"
-        render={(props) => <AdminLayout {...props} />}
-      />
-      <Redirect from="*" to="/admin/index" />
+      <Route path="/admin/" render={(props) => <AdminLayout {...props} />} />
+      <Redirect from="/" to="/admin/index" />
     </Switch>
   </BrowserRouter>
 );
