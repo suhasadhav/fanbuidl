@@ -17,22 +17,29 @@
 */
 
 // reactstrap components
+import { useEffect, useState } from "react";
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
-const Header = ({ accounts, web3, contract }) => {
+const Header = ({ accounts, contract }) => {
+  const [activeSubCount, setActiveSubCount] = useState(0);
+
   function getActiveSubs() {
     try {
-      console.log(accounts);
-      web3.eth.getAccounts().then((res) => {
-        contract.methods
-          .getActiveSubscriptionCount(res)
-          .call()
-          .then(console.log);
+      contract.getActiveSubscriptionCount(accounts[0]).then((result, err) => {
+        if (err) {
+          setActiveSubCount(0);
+        } else {
+          setActiveSubCount(result.toString());
+        }
       });
     } catch (e) {
       console.error(e);
+    } finally {
     }
   }
+  useEffect(() => {
+    getActiveSubs();
+  });
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -49,10 +56,10 @@ const Header = ({ accounts, web3, contract }) => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Active Subscriptions {getActiveSubs()}
+                          Active Subscriptions
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
-                          350,897
+                          {activeSubCount}
                         </span>
                       </div>
                       <Col className="col-auto">

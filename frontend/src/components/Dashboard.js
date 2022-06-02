@@ -32,50 +32,37 @@ import {
 import Header from "./Header.js";
 
 // Contract Specific imports
-import Web3 from "web3";
 import contractAddress from "../contracts/contract-address.json";
 import FanbuidlArtifact from "../contracts/Fanbuidl.json";
 
-const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+import { ethers } from "ethers";
 
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.contract = new web3.eth.Contract(
+    this._initializeEthers();
+  }
+
+  async _initializeEthers() {
+    this._provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    this._contract = new ethers.Contract(
+      contractAddress.Fanbuidl,
       FanbuidlArtifact.abi,
-      contractAddress.Fanbuidl
+      this._provider.getSigner(0)
     );
   }
-
-  getContractOwner() {
-    this.contract.methods.getOwner().call().then(console.log);
-    /*contract.methods
-      .getOwner()
-      .send({ from: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720" })
-      .on("receipt", function (receipt) {
-        console.log(" Receipt:" + receipt);
-      })
-      .on("confirmation", function (confirmationNumber, receipt) {
-        console.log("Confirmation");
-        console.log(
-          "confirmationNumber: " + confirmationNumber + " Receipt:" + receipt
-        );
-      })
-      .on("error", function (error, receipt) {
-        console.log("error Occurred: " + error + " Receipt:" + receipt);
-      });*/
+  async getContractOwner() {
+    this._contract.getOwner().then(console.log);
+    //this._contract
+    //  .getActiveSubscriptionCount(this.props.accounts[0])
+    //  .then(console.log);
   }
-
+  componentDidMount() {}
   render() {
-    //console.log("Get all acc");
-    //web3.eth.getAccounts().then(console.log);
     return (
       <>
-        <Header
-          accounts={this.props.accounts}
-          contract={this.contract}
-          web3={web3}
-        />
+        <Header accounts={this.props.accounts} contract={this._contract} />
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row className="mt-5">
